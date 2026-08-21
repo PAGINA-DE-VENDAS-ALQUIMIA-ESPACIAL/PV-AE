@@ -158,64 +158,30 @@ export function BackgroundFrames() {
       }
     });
 
-    // 2. High-priority immediate buffer: load first 12 frames in small parallel batches
-    const loadInitialBuffer = async () => {
-      const initialCount = Math.min(15, activeFrameUrls.length);
-      const concurrency = 3;
-      for (let i = 1; i < initialCount; i += concurrency) {
+    // 2. High-priority immediate streaming: load all 100 frames in continuous batches of 4
+    const streamAllFrames = async () => {
+      const total = activeFrameUrls.length;
+      const concurrency = 4;
+
+      // Stream sequentially in controlled batches of 4
+      for (let i = 1; i < total; i += concurrency) {
         if (!isMounted) return;
         const batch = [];
-        for (let c = 0; c < concurrency && i + c < initialCount; c++) {
-          batch.push(loadAndDecodeFrame(activeFrameUrls[i + c]));
-        }
-        await Promise.all(batch);
-      }
-
-      // 3. Progressively load the rest using non-blocking idle loop
-      const loadRemaining = async () => {
-        const total = activeFrameUrls.length;
-        // Key landmark frames first
-        const landmarks = [
-          Math.floor(total * 0.25),
-          Math.floor(total * 0.50),
-          Math.floor(total * 0.75),
-          total - 1
-        ];
-        for (const lIdx of landmarks) {
-          if (!isMounted) return;
-          if (lIdx >= initialCount && !imagesCacheRef.current.has(activeFrameUrls[lIdx])) {
-            await loadAndDecodeFrame(activeFrameUrls[lIdx]);
+        for (let c = 0; c < concurrency && i + c < total; c++) {
+          const url = activeFrameUrls[i + c];
+          if (!imagesCacheRef.current.has(url)) {
+            batch.push(loadAndDecodeFrame(url));
           }
         }
-
-        // Remaining frames in steady batches of 3
-        for (let i = initialCount; i < total; i += 3) {
-          if (!isMounted) return;
-          const batch = [];
-          for (let c = 0; c < 3 && i + c < total; c++) {
-            const url = activeFrameUrls[i + c];
-            if (!imagesCacheRef.current.has(url)) {
-              batch.push(loadAndDecodeFrame(url));
-            }
-          }
-          if (batch.length > 0) {
-            await Promise.all(batch);
-            // Brief yield to keep the main thread and network responsive
-            await new Promise((r) => setTimeout(r, 20));
-          }
+        if (batch.length > 0) {
+          await Promise.all(batch);
+          // Tiny 10ms yield to maintain 60fps main-thread responsiveness
+          await new Promise((r) => setTimeout(r, 10));
         }
-      };
-
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(() => {
-          loadRemaining();
-        });
-      } else {
-        setTimeout(loadRemaining, 50);
       }
     };
 
-    loadInitialBuffer();
+    streamAllFrames();
 
     return () => {
       isMounted = false;
@@ -286,7 +252,7 @@ export function BackgroundFrames() {
       const render = () => {
         const diff = targetFrameFloatRef.current - currentFrameFloatRef.current;
         const absDiff = Math.abs(diff);
-        const lerpFactor = isMobile ? 0.16 : 0.12;
+        const lerpFactor = isMobile ? 0.36 : 0.18;
 
         if (absDiff > 0.01) {
           currentFrameFloatRef.current += diff * lerpFactor;

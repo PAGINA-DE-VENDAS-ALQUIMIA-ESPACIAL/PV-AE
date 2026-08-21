@@ -597,7 +597,7 @@ export default function TimelineSection() {
       const diff = targetProgress.current - currentProgress.current;
       
       if (Math.abs(diff) > 0.0001) {
-        const factor = isDraggingRef.current ? 1.0 : (isMobile ? 0.22 : 0.14);
+        const factor = isDraggingRef.current ? 1.0 : (isMobile ? 0.38 : 0.20);
         currentProgress.current += diff * factor;
       } else {
         currentProgress.current = targetProgress.current;
