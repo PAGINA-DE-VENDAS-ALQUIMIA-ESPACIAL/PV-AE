@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Instrument Serif", "Newsreader", "Cormorant Garamond", Georgia, serif;
+}
+
+html {
+  scroll-snap-type: y proximity;
+}
+
+html, body {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.scroll-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Sombra imperceptível e muito sutil apenas para destacar texto claro sobre vídeos/frames */
+body {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+/* Onde for texto preto ou escuro, não tem sombra */
+.text-black, .text-neutral-900, .text-neutral-950, [class*="text-black"] {
+  text-shadow: none !important;
+}
+
+/* Sombra muito leve para símbolos e ícones SVG */
+svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+/* Sombra leve para logomarcas e imagens */
+img {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Hide scrollbars (Scoped with .ae- prefix and fallback) */
+.ae-no-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.ae-no-scrollbar,
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom scrollbars */
+.ae-custom-scrollbar::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.ae-custom-scrollbar::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ae-custom-scrollbar::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.35);
+  border-radius: 10px;
+}
+.ae-custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.7);
+}
+.ae-custom-scrollbar,
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 158, 11, 0.35) transparent;
+}
+
+/* Keyframes & Animações Hero (Componente 01) */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+
+@keyframes aura-wave {
+  0%, 100% {
+    transform: scale(0.99);
+    opacity: 0.05;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.18;
+  }
+}
+@keyframes aura-wave-outer {
+  0%, 100% {
+    transform: scale(0.98);
+    opacity: 0.03;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.12;
+  }
+}
+.animate-aura-slow {
+  animation: aura-wave 12s ease-in-out infinite;
+}
+.animate-aura-outer {
+  animation: aura-wave-outer 14s ease-in-out infinite 2s;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spin-slow-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 28s linear infinite;
+}
+.animate-spin-slow-reverse {
+  animation: spin-slow-reverse 36s linear infinite;
+}
+
+@keyframes ring-glow-pulse {
+  0%, 100% {
+    opacity: 0.65;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.2));
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.75)) drop-shadow(0 0 20px rgba(255, 255, 255, 0.45));
+  }
+}
+.animate-ring-glow {
+  animation: ring-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes outline-light-pulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.15), inset 0 0 2px 0px rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 11px 2px rgba(255, 255, 255, 0.55), inset 0 0 5px 1px rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+.animate-outline-pulse {
+  animation: outline-light-pulse 4.2s ease-in-out infinite;
+}
+
+/* Keyframes & Animações Processos (Componente 02) */
+.font-editorial,
+.timeline-font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.timeline-card {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Keyframes & Animações Plano (Componente 05) */
+@keyframes saas-feature-pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+    filter: blur(6px);
+  }
+  50% {
+    opacity: 0.75;
+    filter: blur(10px);
+  }
+}
+.saas-feature-animate-pulse-glow {
+  animation: saas-feature-pulse-glow 3.5s ease-in-out infinite;
+}

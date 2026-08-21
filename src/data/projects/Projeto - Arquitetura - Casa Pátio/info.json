@@ -1,0 +1,20 @@
+{
+  "id": "casa-patio",
+  "title": "Casa Pátio",
+  "category": "Arquitetura",
+  "location": "Parnamirim - PE",
+  "year": "2026",
+  "summary": "Residência térrea organizada em torno de um pátio central integrado aos ambientes.",
+  "description": "Residência térrea organizada em torno de um pátio central integrado aos ambientes.",
+  "context": "O projeto foi desenvolvido para uma residência térrea em um terreno de 250 m², priorizando integração, iluminação e ventilação naturais. O programa contemplou garagem, área social integrada, duas suítes, piscina e espaços de convivência conectados ao pátio central. Entre os desafios estavam simplificar a proposta inicial, compatibilizar estrutura, cobertura e sistemas construtivos e manter a participação ativa do cliente durante todas as decisões.",
+  "process": "O partido arquitetônico organiza os ambientes ao redor de um pátio central, estabelecendo integração visual entre interior e exterior por meio de grandes painéis de vidro deslizantes. A cobertura em três águas estrutura a volumetria da edificação, enquanto a implantação favorece iluminação e ventilação cruzada. O projeto definiu diretrizes para estrutura, drenagem, instalações hidráulicas e elétricas, além do dimensionamento dos principais elementos construtivos.",
+  "result": "O resultado é uma residência contemporânea com espaços amplos, contínuos e fortemente conectados ao pátio interno, proporcionando conforto ambiental e flexibilidade de uso. A solução arquitetônica equilibra funcionalidade, clareza construtiva e identidade formal, consolidando um projeto desenvolvido por meio de um processo colaborativo que transformou necessidades iniciais em uma proposta coerente e executável.",
+  "coverImage": "./1.jpg",
+  "gallery": [
+    "./1.jpg",
+    "./2.jpg",
+    "./3.jpg",
+    "./5.jpg",
+    "./8.jpg"
+  ]
+}
