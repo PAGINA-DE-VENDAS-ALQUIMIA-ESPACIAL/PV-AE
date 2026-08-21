@@ -5,24 +5,25 @@
   --font-serif: "Playfair Display", "Instrument Serif", "Newsreader", "Cormorant Garamond", Georgia, serif;
 }
 
-html {
-  scroll-snap-type: y proximity;
+/* Scroll Snap suave apenas para desktop, permitindo que no mobile o toque flua 100% natural e sem travas */
+@media (min-width: 1024px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  .scroll-snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
 }
 
-html, body {
-  scroll-behavior: smooth;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  max-width: 100vw;
-  overflow-x: clip;
-  background-color: #000000;
-  color: #ffffff;
-}
-
-.scroll-snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+@media (max-width: 1023px) {
+  html {
+    scroll-snap-type: none;
+  }
+  .scroll-snap-section {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
 }
 
 /* Sombra imperceptível e muito sutil apenas para destacar texto claro sobre vídeos/frames */

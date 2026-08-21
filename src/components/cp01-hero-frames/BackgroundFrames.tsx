@@ -72,77 +72,6 @@ export function BackgroundFrames() {
     };
   }, []);
 
-  // Frame preloading pipeline with asynchronous off-thread image decoding
-  useEffect(() => {
-    if (!activeFrameUrls.length) return;
-
-    let isMounted = true;
-
-    const loadAndDecodeFrame = async (url: string): Promise<HTMLImageElement> => {
-      if (imagesCacheRef.current.has(url)) {
-        return imagesCacheRef.current.get(url)!;
-      }
-
-      const img = new Image();
-      img.src = url;
-
-      try {
-        if ('decode' in img && typeof img.decode === 'function') {
-          await img.decode();
-        } else {
-          await new Promise<void>((resolve) => {
-            img.onload = () => resolve();
-            img.onerror = () => resolve();
-          });
-        }
-      } catch {
-        // Fallback gracefully if decode promise rejects (e.g. fast tab navigation)
-      }
-
-      if (isMounted) {
-        imagesCacheRef.current.set(url, img);
-      }
-      return img;
-    };
-
-    // 1. Instantly load & paint initial frame 0 to avoid visual flash
-    loadAndDecodeFrame(activeFrameUrls[0]).then((img) => {
-      if (!isMounted) return;
-      const canvas = canvasRef.current;
-      if (canvas && img) {
-        drawFrameToCanvas(canvas, img);
-      }
-    });
-
-    // 2. Preload landmark frames followed by progressive full sequence
-    const preloadRest = async () => {
-      const total = activeFrameUrls.length;
-      const keyIndices = [
-        Math.floor(total * 0.2),
-        Math.floor(total * 0.4),
-        Math.floor(total * 0.6),
-        Math.floor(total * 0.8),
-        total - 1
-      ];
-
-      for (const idx of keyIndices) {
-        if (!isMounted) return;
-        await loadAndDecodeFrame(activeFrameUrls[idx]);
-      }
-
-      for (let i = 0; i < total; i++) {
-        if (!isMounted) return;
-        loadAndDecodeFrame(activeFrameUrls[i]);
-      }
-    };
-
-    preloadRest();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeFrameUrls]);
-
   // Aspect-fill image blitting onto the canvas with mobile zoom and upward focal anchoring
   const drawFrameToCanvas = useCallback((canvas: HTMLCanvasElement, img: HTMLImageElement) => {
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -181,6 +110,117 @@ export function BackgroundFrames() {
 
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   }, [isMobile]);
+
+  // Frame preloading pipeline with prioritized concurrency control and idle scheduling
+  useEffect(() => {
+    if (!activeFrameUrls.length) return;
+
+    let isMounted = true;
+    const loadingUrls = new Set<string>();
+
+    const loadAndDecodeFrame = async (url: string): Promise<HTMLImageElement | null> => {
+      if (imagesCacheRef.current.has(url)) {
+        return imagesCacheRef.current.get(url)!;
+      }
+      if (loadingUrls.has(url)) return null;
+      loadingUrls.add(url);
+
+      const img = new Image();
+      img.src = url;
+
+      try {
+        if ('decode' in img && typeof img.decode === 'function') {
+          await img.decode();
+        } else {
+          await new Promise<void>((resolve) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+          });
+        }
+      } catch {
+        // Fallback gracefully if decode promise rejects (e.g. fast tab navigation)
+      } finally {
+        loadingUrls.delete(url);
+      }
+
+      if (isMounted && img.naturalWidth > 0) {
+        imagesCacheRef.current.set(url, img);
+      }
+      return img;
+    };
+
+    // 1. Instantly load & paint initial frame 0 to avoid visual flash
+    loadAndDecodeFrame(activeFrameUrls[0]).then((img) => {
+      if (!isMounted) return;
+      const canvas = canvasRef.current;
+      if (canvas && img && img.naturalWidth > 0) {
+        drawFrameToCanvas(canvas, img);
+      }
+    });
+
+    // 2. High-priority immediate buffer: load first 12 frames in small parallel batches
+    const loadInitialBuffer = async () => {
+      const initialCount = Math.min(15, activeFrameUrls.length);
+      const concurrency = 3;
+      for (let i = 1; i < initialCount; i += concurrency) {
+        if (!isMounted) return;
+        const batch = [];
+        for (let c = 0; c < concurrency && i + c < initialCount; c++) {
+          batch.push(loadAndDecodeFrame(activeFrameUrls[i + c]));
+        }
+        await Promise.all(batch);
+      }
+
+      // 3. Progressively load the rest using non-blocking idle loop
+      const loadRemaining = async () => {
+        const total = activeFrameUrls.length;
+        // Key landmark frames first
+        const landmarks = [
+          Math.floor(total * 0.25),
+          Math.floor(total * 0.50),
+          Math.floor(total * 0.75),
+          total - 1
+        ];
+        for (const lIdx of landmarks) {
+          if (!isMounted) return;
+          if (lIdx >= initialCount && !imagesCacheRef.current.has(activeFrameUrls[lIdx])) {
+            await loadAndDecodeFrame(activeFrameUrls[lIdx]);
+          }
+        }
+
+        // Remaining frames in steady batches of 3
+        for (let i = initialCount; i < total; i += 3) {
+          if (!isMounted) return;
+          const batch = [];
+          for (let c = 0; c < 3 && i + c < total; c++) {
+            const url = activeFrameUrls[i + c];
+            if (!imagesCacheRef.current.has(url)) {
+              batch.push(loadAndDecodeFrame(url));
+            }
+          }
+          if (batch.length > 0) {
+            await Promise.all(batch);
+            // Brief yield to keep the main thread and network responsive
+            await new Promise((r) => setTimeout(r, 20));
+          }
+        }
+      };
+
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(() => {
+          loadRemaining();
+        });
+      } else {
+        setTimeout(loadRemaining, 50);
+      }
+    };
+
+    loadInitialBuffer();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [activeFrameUrls, drawFrameToCanvas]);
 
   // Main scroll tracker, dynamic resize listener, and on-demand lerp loop
   useEffect(() => {
@@ -267,21 +307,28 @@ export function BackgroundFrames() {
             drawFrameToCanvas(canvas, cachedImg);
             lastRenderedIndexRef.current = frameIndex;
           } else {
-            // Locate closest decoded frame if current frame is loading
+            // Locate closest decoded frame if current frame is still decoding
             let fallbackImg: HTMLImageElement | undefined;
-            for (let offset = 1; offset < 10; offset++) {
+            const maxRange = Math.max(frameIndex, activeFrameUrls.length - frameIndex);
+            for (let offset = 1; offset <= maxRange; offset++) {
               const prevUrl = activeFrameUrls[frameIndex - offset];
               const nextUrl = activeFrameUrls[frameIndex + offset];
               if (prevUrl && imagesCacheRef.current.has(prevUrl)) {
-                fallbackImg = imagesCacheRef.current.get(prevUrl);
-                break;
+                const img = imagesCacheRef.current.get(prevUrl);
+                if (img && img.complete && img.naturalWidth > 0) {
+                  fallbackImg = img;
+                  break;
+                }
               }
               if (nextUrl && imagesCacheRef.current.has(nextUrl)) {
-                fallbackImg = imagesCacheRef.current.get(nextUrl);
-                break;
+                const img = imagesCacheRef.current.get(nextUrl);
+                if (img && img.complete && img.naturalWidth > 0) {
+                  fallbackImg = img;
+                  break;
+                }
               }
             }
-            if (fallbackImg && fallbackImg.complete) {
+            if (fallbackImg && fallbackImg.complete && fallbackImg.naturalWidth > 0) {
               drawFrameToCanvas(canvas, fallbackImg);
             }
           }

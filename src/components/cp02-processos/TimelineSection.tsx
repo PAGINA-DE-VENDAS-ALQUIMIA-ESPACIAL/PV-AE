@@ -297,7 +297,6 @@ const getSlideTranslateY = (idx: number, scrollPos: number, lineY: number): numb
 };
 
 export default function TimelineSection() {
-  const [progress, setProgress] = useState(0);
   const [currentPageIndex, setCurrentPageIndex] = useState<number | null>(null);
   const [lineYPercent, setLineYPercent] = useState(35);
   const [isMobile, setIsMobile] = useState(false);
@@ -306,6 +305,10 @@ export default function TimelineSection() {
 
   const [isNavDragging, setIsNavDragging] = useState(false);
   const [isHoldingBackground, setIsHoldingBackground] = useState(false);
+
+  const slideOuterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const slideInnerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const progressBarFillRef = useRef<HTMLDivElement | null>(null);
 
   const wrapperOffsetTopRef = useRef<number | null>(null);
   const wrapperHeightRef = useRef<number>(12000);
@@ -571,19 +574,38 @@ export default function TimelineSection() {
     let animationFrameId: number | null = null;
     let isLooping = false;
 
+    const applyTransforms = (scrollPos: number) => {
+      // 1. Direct GPU transform updates on the 6 curtain slides
+      for (let idx = 0; idx < 6; idx++) {
+        const outer = slideOuterRefs.current[idx];
+        const inner = slideInnerRefs.current[idx];
+        if (outer && inner) {
+          const translateY = getSlideTranslateY(idx, scrollPos, lineYPercent);
+          outer.style.transform = `translate3d(0, ${translateY}%, 0)`;
+          inner.style.transform = `translate3d(0, ${-translateY}%, 0)`;
+        }
+      }
+
+      // 2. Direct width update on persistent horizontal line fill
+      if (progressBarFillRef.current) {
+        const barPercent = Math.max(0, Math.min(100, (scrollPos / 6.0) * 100));
+        progressBarFillRef.current.style.width = `${barPercent}%`;
+      }
+    };
+
     const updateInterpolation = () => {
       const diff = targetProgress.current - currentProgress.current;
       
       if (Math.abs(diff) > 0.0001) {
-        const factor = isDraggingRef.current ? 1.0 : 0.11;
+        const factor = isDraggingRef.current ? 1.0 : (isMobile ? 0.22 : 0.14);
         currentProgress.current += diff * factor;
-        setProgress(currentProgress.current);
-      } else if (currentProgress.current !== targetProgress.current) {
+      } else {
         currentProgress.current = targetProgress.current;
-        setProgress(targetProgress.current);
       }
 
       const scrollPos = currentProgress.current * 6;
+      applyTransforms(scrollPos);
+
       let calculatedIndex = 0;
       if (scrollPos < 1.0) {
         calculatedIndex = 0;
@@ -645,9 +667,9 @@ export default function TimelineSection() {
     handleScroll();
     
     currentProgress.current = targetProgress.current;
-    setProgress(targetProgress.current);
-    
     const initialScrollPos = targetProgress.current * 6;
+    applyTransforms(initialScrollPos);
+    
     let initialIndex = 0;
     if (initialScrollPos < 1.0) {
       initialIndex = 0;
@@ -679,13 +701,7 @@ export default function TimelineSection() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [updateWrapperMetrics]);
-
-  // Continuous background strip translation calculation over 6 steps
-  const scrollPosition = progress * 6; 
-  
-  // Symmetrical progress bar starting at 0.0 (Compra enters) up to 6.0 (Construção completes)
-  const barPercent = Math.max(0, Math.min(100, (scrollPosition / 6.0) * 100));
+  }, [updateWrapperMetrics, isMobile, lineYPercent]);
 
   const activeProcess = processos[currentPageIndex !== null ? currentPageIndex : 0];
   const secaoParts = activeProcess.secao.split(/\s*•\s*/);
@@ -735,24 +751,25 @@ export default function TimelineSection() {
         */}
         <div id="timeline-fullscreen-bg-container" className="absolute inset-0 z-0 w-full h-full overflow-hidden">
           {processos.map((proc, idx) => {
-            const translateYParent = getSlideTranslateY(idx, scrollPosition, lineYPercent);
             const zIndex = 10 + idx;
             const bgImage = isMobile && proc.imagemMobile ? proc.imagemMobile : proc.imagem;
             
             return (
               <div
                 key={proc.numero}
+                ref={(el) => { slideOuterRefs.current[idx] = el; }}
                 className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
                 style={{
-                  transform: `translateY(${translateYParent}%) translateZ(0)`,
+                  transform: `translate3d(0, ${idx === 0 ? 0 : 100}%, 0)`,
                   willChange: 'transform',
                   zIndex: zIndex
                 }}
               >
                 <div
+                  ref={(el) => { slideInnerRefs.current[idx] = el; }}
                   className="absolute inset-0 w-full h-full"
                   style={{
-                    transform: `translateY(${-translateYParent}%) translateZ(0)`,
+                    transform: `translate3d(0, ${idx === 0 ? 0 : -100}%, 0)`,
                     willChange: 'transform'
                   }}
                 >
@@ -788,8 +805,9 @@ export default function TimelineSection() {
         >
           <div 
             id="timeline-persistent-horizontal-line-fill" 
-            className="absolute top-0 left-0 h-[1.5px] bg-white"
-            style={{ width: `${barPercent}%` }}
+            ref={progressBarFillRef}
+            className="absolute top-0 left-0 h-[1.5px] bg-white will-change-[width]"
+            style={{ width: '0%' }}
           />
         </div>
 
