@@ -1,6 +1,11 @@
 # Integration Ledger
 
-**TL;DR:** registro de fatos, não de análise. Cada linha aqui reflete a confirmação pós-implementação dos 7 componentes da landing page da Alquimia Espacial.
+**TL;DR:** registro de fatos, não de análise. Cada linha aqui é transcrita automaticamente pelo workflow `/integrar-componente` (ou `/atualizar-componente`, quando o contrato muda) logo depois que um componente é validado — nunca antes. Ninguém compara ou julga nada aqui no momento do registro; a análise cruzada de tudo que está nesta tabela acontece uma única vez, no `/finalizar-pagina`, quando a página inteira já existe e faz sentido olhar o conjunto.
+
+**Como usar:** este arquivo fica na raiz do projeto master, visível na barra lateral do Antigravity. Não edite manualmente durante as integrações — deixe o workflow preencher. Se uma linha estiver errada, o pior caso é o `/finalizar-pagina` olhar primeiro no lugar errado; ele sempre confirma contra o código real antes de decidir qualquer coisa, então um erro aqui nunca é definitivo.
+
+
+**Propósito geral:** este material existe para usar as ferramentas de IA do Google — AI Studio para criar, Antigravity para integrar — de forma fluida, simples e assertiva, trabalhando por modularidade. Cada componente nasce como um projeto individual e independente no AI Studio, já testado e aprovado sozinho, e só depois é trazido para dentro de um projeto maior aqui no Antigravity, onde é encaixado ao lado dos demais sem perder o que o tornava único.
 
 ---
 

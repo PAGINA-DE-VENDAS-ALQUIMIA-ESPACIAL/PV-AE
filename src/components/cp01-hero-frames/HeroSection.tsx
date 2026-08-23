@@ -11,10 +11,12 @@ import logoVerticalBranca from '../../assets/images/Logomarca Vertical - Princip
 import logoVerticalColorida from '../../assets/images/Logomarca Vertical - Principal.svg';
 import cardStudioLeft from '../../assets/images/Arquitetura Maquete e Plantas.jpeg';
 import cardStudioRight from '../../assets/images/Arquitetura Maquete e Plantas 2.jpeg';
+import { lazy, Suspense } from 'react';
 import { OrbitingCocreateCards } from './OrbitingCocreateCards';
-import { ProposalFormModal } from './ProposalFormModal';
-import { ClientPortalModal } from './ClientPortalModal';
 import { BackgroundFrames } from './BackgroundFrames';
+
+const ProposalFormModal = lazy(() => import('./ProposalFormModal').then(m => ({ default: m.ProposalFormModal })));
+const ClientPortalModal = lazy(() => import('./ClientPortalModal').then(m => ({ default: m.ClientPortalModal })));
 
 const NOTION_FORM_URL = "https://alquimiaespacial.notion.site/36c302780bb881e29a53cd4ee6435a7e";
 
@@ -805,18 +807,26 @@ export default function App() {
       )}
 
       {/* Interactive Pop-Up Proposal Form Modal */}
-      <ProposalFormModal
-        isOpen={isProposalModalOpen}
-        onClose={() => setIsProposalModalOpen(false)}
-        onOpenLogin={() => setIsClientPortalModalOpen(true)}
-      />
+      {isProposalModalOpen && (
+        <Suspense fallback={null}>
+          <ProposalFormModal
+            isOpen={isProposalModalOpen}
+            onClose={() => setIsProposalModalOpen(false)}
+            onOpenLogin={() => setIsClientPortalModalOpen(true)}
+          />
+        </Suspense>
+      )}
 
       {/* Docto-Espacial Restricted Client Portal Login Modal */}
-      <ClientPortalModal
-        isOpen={isClientPortalModalOpen}
-        onClose={() => setIsClientPortalModalOpen(false)}
-        onRequestProposal={() => setIsProposalModalOpen(true)}
-      />
+      {isClientPortalModalOpen && (
+        <Suspense fallback={null}>
+          <ClientPortalModal
+            isOpen={isClientPortalModalOpen}
+            onClose={() => setIsClientPortalModalOpen(false)}
+            onRequestProposal={() => setIsProposalModalOpen(true)}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

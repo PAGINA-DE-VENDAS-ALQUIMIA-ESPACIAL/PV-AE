@@ -162,6 +162,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                   <img
                     src={brendonPB}
                     alt="Foto de José de Alencar (Preto e Branco)"
+                    loading="lazy"
                     decoding="async"
                     className="w-full h-full object-contain sm:object-cover object-right-bottom sm:object-top scale-[0.90] sm:scale-100 origin-bottom-right transition-transform duration-300"
                   />
@@ -170,6 +171,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                   <img
                     src={brendonCL}
                     alt="Foto de José de Alencar (Colorido)"
+                    loading="lazy"
                     decoding="async"
                     className={`absolute inset-0 w-full h-full object-contain sm:object-cover object-right-bottom sm:object-top scale-[0.90] sm:scale-100 origin-bottom-right transition-opacity duration-300 ${
                       isColor ? 'opacity-100' : 'opacity-0'
