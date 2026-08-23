@@ -583,6 +583,12 @@ export default function TimelineSection() {
           const translateY = getSlideTranslateY(idx, scrollPos, lineYPercent);
           outer.style.transform = `translate3d(0, ${translateY}%, 0)`;
           inner.style.transform = `translate3d(0, ${-translateY}%, 0)`;
+          // Hide slides that are completely offscreen to save GPU memory and eliminate overdraw
+          if (idx > 0 && translateY >= 99.9) {
+            outer.style.visibility = 'hidden';
+          } else {
+            outer.style.visibility = 'visible';
+          }
         }
       }
 
@@ -597,7 +603,7 @@ export default function TimelineSection() {
       const diff = targetProgress.current - currentProgress.current;
       
       if (Math.abs(diff) > 0.0001) {
-        const factor = isDraggingRef.current ? 1.0 : (isMobile ? 0.38 : 0.20);
+        const factor = isDraggingRef.current ? 1.0 : (isMobile ? 0.48 : 0.30);
         currentProgress.current += diff * factor;
       } else {
         currentProgress.current = targetProgress.current;

@@ -74,8 +74,11 @@ export function BackgroundFrames() {
 
   // Aspect-fill image blitting onto the canvas with mobile zoom and upward focal anchoring
   const drawFrameToCanvas = useCallback((canvas: HTMLCanvasElement, img: HTMLImageElement) => {
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     if (!ctx) return;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'medium';
 
     const cw = canvas.width;
     const ch = canvas.height;
@@ -138,7 +141,7 @@ export function BackgroundFrames() {
           });
         }
       } catch {
-        // Fallback gracefully if decode promise rejects (e.g. fast tab navigation)
+        // Fallback gracefully if decode promise rejects
       } finally {
         loadingUrls.delete(url);
       }
@@ -158,12 +161,11 @@ export function BackgroundFrames() {
       }
     });
 
-    // 2. High-priority immediate streaming: load all 100 frames in continuous batches of 4
+    // 2. High-priority immediate streaming: load frames smoothly across idle frames
     const streamAllFrames = async () => {
       const total = activeFrameUrls.length;
       const concurrency = 4;
 
-      // Stream sequentially in controlled batches of 4
       for (let i = 1; i < total; i += concurrency) {
         if (!isMounted) return;
         const batch = [];
@@ -175,8 +177,8 @@ export function BackgroundFrames() {
         }
         if (batch.length > 0) {
           await Promise.all(batch);
-          // Tiny 10ms yield to maintain 60fps main-thread responsiveness
-          await new Promise((r) => setTimeout(r, 10));
+          // Yield to browser rendering
+          await new Promise((r) => setTimeout(r, 8));
         }
       }
     };
@@ -252,7 +254,7 @@ export function BackgroundFrames() {
       const render = () => {
         const diff = targetFrameFloatRef.current - currentFrameFloatRef.current;
         const absDiff = Math.abs(diff);
-        const lerpFactor = isMobile ? 0.36 : 0.18;
+        const lerpFactor = isMobile ? 0.44 : 0.28;
 
         if (absDiff > 0.01) {
           currentFrameFloatRef.current += diff * lerpFactor;
