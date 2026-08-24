@@ -4,19 +4,19 @@ import {
   Sparkles, 
   LogIn, 
   Palette, 
-  Gift,
-  Layers,
-  ClipboardList,
-  Play,
-  Key,
-  Home,
-  Ear,
-  Target,
-  Lightbulb,
-  AlertTriangle,
-  Maximize2,
-  BookOpen,
-  Route
+  Gift, 
+  Layers, 
+  ClipboardList, 
+  Play, 
+  Key, 
+  Home, 
+  Ear, 
+  Target, 
+  Lightbulb, 
+  AlertTriangle, 
+  Maximize2, 
+  BookOpen, 
+  Route 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 // @ts-ignore
@@ -225,27 +225,26 @@ const processos: Processo[] = [
   }
 ];
 
-// Helper to get custom colors for the category block badges as requested by the user
 const getBadgeColors = (categoria: string) => {
   const cat = categoria.toUpperCase();
   if (cat.includes("BLOCO 01") || cat.includes("BLOCO 1")) {
     return {
-      bg: "#F4F6F9", // branco gelo
-      text: "#1F2937", // dark slate text
+      bg: "#F4F6F9",
+      text: "#1F2937",
       icon: LogIn
     };
   }
   if (cat.includes("BLOCO 02") || cat.includes("BLOCO 2")) {
     return {
-      bg: "#C99A1C", // amarelo queimado elegante (sem tom de laranja)
-      text: "#111827", // dark grey text
+      bg: "#C99A1C",
+      text: "#111827",
       icon: Palette
     };
   }
   if (cat.includes("BLOCO 03") || cat.includes("BLOCO 3")) {
     return {
-      bg: "#606C38", // verde oliva
-      text: "#F8FAFC", // light off-white text
+      bg: "#606C38",
+      text: "#F8FAFC",
       icon: Gift
     };
   }
@@ -285,11 +284,9 @@ const getSlideTranslateY = (idx: number, scrollPos: number, lineY: number): numb
   }
   
   if (scrollPos <= idx) {
-    // Part 1: from prevCenter (100%) to idx (lineY)
     const t = (scrollPos - prevCenter) / 0.5;
     return 100 - t * (100 - lineY);
   } else {
-    // Part 2: from idx (lineY) to thisCenter (0%)
     const dt = thisCenter - idx;
     const t = (scrollPos - idx) / dt;
     return lineY - t * lineY;
@@ -298,13 +295,14 @@ const getSlideTranslateY = (idx: number, scrollPos: number, lineY: number): numb
 
 export default function TimelineSection() {
   const [currentPageIndex, setCurrentPageIndex] = useState<number | null>(null);
-  const [lineYPercent, setLineYPercent] = useState(35);
+  const [lineYPercent, setLineYPercent] = useState(30);
   const [isMobile, setIsMobile] = useState(false);
   const [isBlockPinned, setIsBlockPinned] = useState(false);
   const [isPhasePinned, setIsPhasePinned] = useState(false);
 
   const [isNavDragging, setIsNavDragging] = useState(false);
   const [isHoldingBackground, setIsHoldingBackground] = useState(false);
+  const [areCardsHidden, setAreCardsHidden] = useState(false);
 
   const slideOuterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const slideInnerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -325,11 +323,56 @@ export default function TimelineSection() {
 
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const holdTimerRef = useRef<number | null>(null);
+  const explanationTimerRef = useRef<number | null>(null);
+  const cardsTimerRef = useRef<number | null>(null);
+
+  const triggerBlockExplanation = useCallback(() => {
+    if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+    setIsBlockPinned((prev) => {
+      const next = !prev;
+      if (next) {
+        setIsPhasePinned(false);
+        explanationTimerRef.current = window.setTimeout(() => {
+          setIsBlockPinned(false);
+          explanationTimerRef.current = null;
+        }, 3000);
+      }
+      return next;
+    });
+  }, []);
+
+  const triggerPhaseExplanation = useCallback(() => {
+    if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+    setIsPhasePinned((prev) => {
+      const next = !prev;
+      if (next) {
+        setIsBlockPinned(false);
+        explanationTimerRef.current = window.setTimeout(() => {
+          setIsPhasePinned(false);
+          explanationTimerRef.current = null;
+        }, 3000);
+      }
+      return next;
+    });
+  }, []);
+
+  const triggerToggleCards = useCallback(() => {
+    if (cardsTimerRef.current) clearTimeout(cardsTimerRef.current);
+    setAreCardsHidden((prev) => {
+      const next = !prev;
+      if (next) {
+        cardsTimerRef.current = window.setTimeout(() => {
+          setAreCardsHidden(false);
+          cardsTimerRef.current = null;
+        }, 3000);
+      }
+      return next;
+    });
+  }, []);
 
   const mouseMoveHandlerRef = useRef<((ev: globalThis.MouseEvent) => void) | null>(null);
   const mouseUpHandlerRef = useRef<(() => void) | null>(null);
 
-  // Smooth scroll helper for step navigation
   const smoothScrollTo = useCallback((targetY: number, duration = 750) => {
     const startY = window.scrollY || document.documentElement.scrollTop;
     const difference = targetY - startY;
@@ -339,7 +382,6 @@ export default function TimelineSection() {
       const timeElapsed = currentTime - startTime;
       const progressRatio = Math.min(timeElapsed / duration, 1);
       
-      // Easing function: easeInOutCubic
       const ease = progressRatio < 0.5 
         ? 4 * progressRatio * progressRatio * progressRatio 
         : 1 - Math.pow(-2 * progressRatio + 2, 3) / 2;
@@ -408,7 +450,6 @@ export default function TimelineSection() {
     const touch = e.touches[0];
     const dx = touch.clientX - touchStartPos.current.x;
     const dy = touch.clientY - touchStartPos.current.y;
-    // If they moved their finger by more than 10 pixels, they are scrolling, not holding
     if (Math.sqrt(dx * dx + dy * dy) > 10) {
       cancelHoldTimer();
       touchStartPos.current = null;
@@ -446,12 +487,6 @@ export default function TimelineSection() {
   
   const touchStartYRef = useRef(0);
   const touchHasMovedRef = useRef(false);
-
-  // Reset tooltips immediately when section changes
-  useEffect(() => {
-    setIsBlockPinned(false);
-    setIsPhasePinned(false);
-  }, [currentPageIndex]);
 
   const handlePointerNav = useCallback((clientY: number) => {
     if (!dragContainerRectRef.current) return;
@@ -491,13 +526,12 @@ export default function TimelineSection() {
 
   const handleNavTouchEnd = useCallback(() => {
     if (!touchHasMovedRef.current && dragContainerRectRef.current) {
-      // It was a tap! Let's find which step was tapped based on relative Y position
       const rect = dragContainerRectRef.current;
       const relativeY = touchStartYRef.current - rect.top;
       const percent = Math.max(0, Math.min(1, relativeY / rect.height));
       const targetIdx = Math.max(0, Math.min(processos.length - 1, Math.floor(percent * processos.length)));
       
-      navigateToStep(targetIdx, false); // Beautiful smooth scroll!
+      navigateToStep(targetIdx, false);
     }
     
     isDraggingRef.current = false;
@@ -531,11 +565,16 @@ export default function TimelineSection() {
     window.addEventListener('mouseup', handleMouseUpGlobal);
   }, [handlePointerNav]);
 
-  // Robust resource cleanup on unmount
   useEffect(() => {
     return () => {
       if (holdTimerRef.current) {
         window.clearTimeout(holdTimerRef.current);
+      }
+      if (explanationTimerRef.current) {
+        window.clearTimeout(explanationTimerRef.current);
+      }
+      if (cardsTimerRef.current) {
+        window.clearTimeout(cardsTimerRef.current);
       }
       if (mouseMoveHandlerRef.current) {
         window.removeEventListener('mousemove', mouseMoveHandlerRef.current);
@@ -551,7 +590,7 @@ export default function TimelineSection() {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
       if (mobile) {
-        setLineYPercent(32);
+        setLineYPercent(30);
       } else {
         setLineYPercent(35);
       }
@@ -562,20 +601,10 @@ export default function TimelineSection() {
   }, []);
 
   useEffect(() => {
-    const dismissTooltips = () => {
-      setIsBlockPinned(false);
-      setIsPhasePinned(false);
-    };
-    window.addEventListener('click', dismissTooltips);
-    return () => window.removeEventListener('click', dismissTooltips);
-  }, []);
-
-  useEffect(() => {
     let animationFrameId: number | null = null;
     let isLooping = false;
 
     const applyTransforms = (scrollPos: number) => {
-      // 1. Direct GPU transform updates on the 6 curtain slides
       for (let idx = 0; idx < 6; idx++) {
         const outer = slideOuterRefs.current[idx];
         const inner = slideInnerRefs.current[idx];
@@ -583,7 +612,6 @@ export default function TimelineSection() {
           const translateY = getSlideTranslateY(idx, scrollPos, lineYPercent);
           outer.style.transform = `translate3d(0, ${translateY}%, 0)`;
           inner.style.transform = `translate3d(0, ${-translateY}%, 0)`;
-          // Hide slides that are completely offscreen to save GPU memory and eliminate overdraw
           if (idx > 0 && translateY >= 99.9) {
             outer.style.visibility = 'hidden';
           } else {
@@ -592,7 +620,6 @@ export default function TimelineSection() {
         }
       }
 
-      // 2. Direct width update on persistent horizontal line fill
       if (progressBarFillRef.current) {
         const barPercent = Math.max(0, Math.min(100, (scrollPos / 6.0) * 100));
         progressBarFillRef.current.style.width = `${barPercent}%`;
@@ -634,7 +661,6 @@ export default function TimelineSection() {
         setIsPhasePinned(false);
       }
 
-      // Continue loop only if the difference has not yet settled
       if (Math.abs(targetProgress.current - currentProgress.current) > 0.0001) {
         animationFrameId = requestAnimationFrame(updateInterpolation);
       } else {
@@ -644,6 +670,9 @@ export default function TimelineSection() {
     };
 
     const handleScroll = () => {
+      if (areCardsHidden) {
+        setAreCardsHidden(false);
+      }
       if (wrapperOffsetTopRef.current === null) {
         updateWrapperMetrics();
       }
@@ -693,7 +722,6 @@ export default function TimelineSection() {
     pageIndexRef.current = initialIndex;
     setCurrentPageIndex(initialIndex);
 
-    // Initial run to settle layout smoothly
     isLooping = true;
     animationFrameId = requestAnimationFrame(updateInterpolation);
 
@@ -707,16 +735,39 @@ export default function TimelineSection() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [updateWrapperMetrics, isMobile, lineYPercent]);
+  }, [updateWrapperMetrics, isMobile, lineYPercent, areCardsHidden]);
 
   const activeProcess = processos[currentPageIndex !== null ? currentPageIndex : 0];
   const secaoParts = activeProcess.secao.split(/\s*•\s*/);
   const line1 = secaoParts[0] || "";
   const line2 = secaoParts[1] || "";
 
+  const isHidden = isHoldingBackground;
+
+  const activeExplanationText = isHoldingBackground
+    ? null
+    : isBlockPinned 
+    ? blockExplanations[activeProcess.categoria]
+    : isPhasePinned 
+    ? phaseExplanations[activeProcess.secao]
+    : null;
+
   return (
     <div id="timeline-scroll-wrapper" className="relative w-full h-[1200vh] sm:h-[1300vh] bg-transparent">
       
+      {/* Full-screen backdrop to restore cards when hidden */}
+      {areCardsHidden && (
+        <div 
+          className="fixed inset-0 z-20 cursor-pointer pointer-events-auto"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (cardsTimerRef.current) clearTimeout(cardsTimerRef.current);
+            setAreCardsHidden(false);
+          }}
+          aria-label="Toque para reexibir os cards"
+        />
+      )}
+
       {/* Fixed Sticky Screen Container */}
       <div 
         id="timeline-sticky-screen-container" 
@@ -730,23 +781,65 @@ export default function TimelineSection() {
         onTouchCancel={handleBackgroundTouchEnd}
       >
         
-        {/* Centered headline */}
+        {/* Top headline / Active explanation area */}
         <div 
-          className="mt-[20px] absolute top-10 sm:top-12 md:top-14 lg:top-16 left-0 w-full z-30 px-3 sm:px-6 md:px-16 lg:px-24 flex items-center justify-center text-center pointer-events-auto"
+          className="absolute top-22 xs:top-26 sm:top-16 md:top-20 lg:top-24 left-0 w-full z-30 px-4 sm:px-6 md:px-12 lg:px-16 flex items-center justify-center text-center pointer-events-auto min-h-[58px]"
           style={{
-            opacity: isHoldingBackground ? 0 : 1,
+            opacity: isHidden ? 0 : 1,
             transition: 'opacity 0.25s ease-out',
-            pointerEvents: isHoldingBackground ? 'none' : 'auto'
+            pointerEvents: isHidden ? 'none' : 'auto'
           }}
         >
-          <a 
-            href="#timeline-scroll-wrapper" 
-            aria-label="Conheça o processo por trás do seu projeto"
-            className="mt-[20px] text-white/90 font-sans font-normal tracking-normal text-center select-none max-w-full text-[21px] xs:text-[23px] sm:text-[30px] leading-[1.2] sm:leading-snug drop-shadow-md block"
-          >
-            <span className="block sm:inline whitespace-nowrap">Conheça o <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">processo</span></span>{" "}
-            <span className="block sm:inline whitespace-nowrap">por trás do <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">seu projeto</span>.</span>
-          </a>
+          <AnimatePresence mode="wait">
+            {activeExplanationText ? (
+              <motion.div
+                key={`explanation-${activeProcess.numero}-${isBlockPinned ? 'block' : 'phase'}`}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto flex items-center justify-center cursor-pointer px-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+                  setIsBlockPinned(false);
+                  setIsPhasePinned(false);
+                }}
+              >
+                <p className="text-white/95 text-center font-cargiona text-[15px] xs:text-[16px] sm:text-[18px] md:text-[19.5px] lg:text-[21px] font-normal leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] max-w-full sm:whitespace-nowrap [text-wrap:balance]">
+                  {activeExplanationText}
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="main-headline"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <a 
+                  href="#timeline-scroll-wrapper" 
+                  aria-label="Conheça o processo por trás do seu projeto"
+                  className="font-cargiona font-normal tracking-normal text-center select-none max-w-full text-[23px] xs:text-[25px] sm:text-[30px] md:text-[34px] lg:text-[38px] xl:text-[40px] leading-[1.08] sm:leading-[1.10] drop-shadow-md block cursor-pointer text-white/90"
+                >
+                  <span className="block whitespace-nowrap">
+                    Conheça o{" "}
+                    <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">
+                      processo
+                    </span>
+                  </span>
+                  <span className="block whitespace-nowrap -mt-1 sm:-mt-1 md:-mt-1.5 lg:-mt-2">
+                    por trás do{" "}
+                    <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">
+                      seu projeto
+                    </span>
+                    .
+                  </span>
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* 
@@ -806,7 +899,8 @@ export default function TimelineSection() {
           className="absolute left-0 right-0 z-20 h-[1px] bg-white/25"
           style={{ 
             top: `${lineYPercent}%`,
-            opacity: 1
+            opacity: isHidden ? 0 : 1,
+            transition: 'opacity 0.25s ease-out'
           }}
         >
           <div 
@@ -861,69 +955,54 @@ export default function TimelineSection() {
                         }
                       }
                     }}
-                    className="absolute bottom-full left-6 right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-[780px] lg:max-w-[900px] xl:max-w-[1080px] 2xl:max-w-[1240px] pb-3 flex items-center justify-between pointer-events-auto"
+                    style={{
+                      opacity: isHidden ? 0 : 1,
+                      transition: 'opacity 0.25s ease-out',
+                      pointerEvents: isHidden ? 'none' : 'auto'
+                    }}
+                    className="absolute bottom-full left-6 right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-[780px] lg:max-w-[900px] xl:max-w-[1080px] 2xl:max-w-[1240px] pb-4 sm:pb-3 flex items-center justify-between pointer-events-auto"
                   >
                     
                     {/* Category Badge (Block) on the Left */}
                     {(() => {
-                      const colors = getBadgeColors(activeProcess.categoria);
-                      const IconComponent = colors.icon;
-                      const parts = activeProcess.categoria.split(/\s*•\s*/);
-                      const blocoTop = parts[0] || "BLOCO";
-                      const blocoBottom = parts[1] || "";
+                      const badge = getBadgeColors(activeProcess.categoria);
+                      const IconComponent = badge.icon;
+                      const blocoParts = activeProcess.categoria.split(/\s*•\s*/);
+                      const blocoTop = blocoParts[0] || "";
+                      const blocoBottom = blocoParts[1] || "";
+                      
                       return (
                         <div 
                           data-timeline-no-press-hold="true"
                           data-no-press-hold="true"
                           role="button"
                           tabIndex={0}
-                          aria-label={`Ver informações do ${activeProcess.categoria}`}
-                          aria-expanded={isBlockPinned}
+                          aria-label={`Categoria ${activeProcess.categoria}. Clique para ver explicação`}
                           className="relative select-none flex-shrink-0 pointer-events-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setIsBlockPinned(!isBlockPinned);
-                            setIsPhasePinned(false);
+                            triggerBlockExplanation();
                           }}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
                               e.stopPropagation();
-                              setIsBlockPinned(!isBlockPinned);
-                              setIsPhasePinned(false);
+                              triggerBlockExplanation();
                             }
                           }}
                         >
-                          {/* Slow pulsing wave ring */}
-                          <motion.div
-                            className="absolute -inset-1 rounded-lg pointer-events-none"
-                            style={{ 
-                              border: `1.5px solid ${colors.bg}`,
-                              transform: 'translateZ(0)'
-                            }}
-                            animate={{
-                              scale: [1, 1.12, 1],
-                              opacity: [0.15, 0.4, 0.15],
-                            }}
-                            transition={{
-                              duration: 4.0,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          />
                           <div 
-                            className="relative flex items-center gap-2 sm:gap-3 px-3 sm:px-4 rounded-lg text-left shadow-lg select-none border border-white/10 hover:brightness-110 h-[44px] sm:h-[50px] md:h-[54px]"
+                            className="inline-flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-sm transition-all duration-300 pointer-events-auto"
                             style={{ 
-                              backgroundColor: colors.bg,
-                              color: colors.text,
-                              transform: 'translateZ(0)'
+                              backgroundColor: badge.bg,
+                              color: badge.text
                             }}
                           >
                             <div className="flex-shrink-0">
                               <IconComponent className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
                             </div>
                             <div className="flex flex-col items-start leading-none">
-                              <span className="text-[10px] font-mono font-bold tracking-widest uppercase opacity-75 mb-0.5 sm:mb-1">
+                              <span className="text-[10px] sm:text-[10.5px] font-dmsans font-semibold tracking-widest uppercase opacity-80 mb-0.5 sm:mb-1">
                                 {blocoTop}
                               </span>
                               <span className="text-[15px] font-display font-bold tracking-wider uppercase">
@@ -935,120 +1014,35 @@ export default function TimelineSection() {
                       );
                     })()}
 
-                    {/* Central Rectangle (Desktop / Tablet / Mobile) */}
-                    <AnimatePresence>
-                      {(() => {
-                        const activeExplanationText = isHoldingBackground
-                          ? null
-                          : isBlockPinned 
-                          ? blockExplanations[activeProcess.categoria]
-                          : isPhasePinned 
-                          ? phaseExplanations[activeProcess.secao]
-                          : null;
-
-                        if (!activeExplanationText) return null;
-
-                        const isBlock = activeExplanationText.length < 110;
-
-                        return (
-                          <>
-                            {!isMobile && (
-                              <motion.div 
-                                data-timeline-no-press-hold="true"
-                                data-no-press-hold="true"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.25, ease: "easeOut" }}
-                                className="absolute left-1/2 -translate-x-1/2 top-0 h-[44px] sm:h-[50px] md:h-[54px] flex items-center justify-center md:w-[360px] lg:w-[480px] xl:w-[620px] 2xl:w-[740px] px-4 pointer-events-auto"
-                              >
-                                {isBlock ? (
-                                  <p className="text-white text-center font-display text-[11px] md:text-[12px] lg:text-[13.5px] xl:text-[15px] 2xl:text-[16px] font-medium tracking-wide w-full leading-none whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                                    {activeExplanationText}
-                                  </p>
-                                ) : (
-                                  <p className="text-white text-center font-display text-[9.5px] md:text-[10.5px] lg:text-[11.5px] xl:text-[13px] 2xl:text-[14px] font-medium tracking-wide w-full leading-none whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                                    {activeExplanationText}
-                                  </p>
-                                )}
-                              </motion.div>
-                            )}
-
-                            {isMobile && (
-                              <motion.div 
-                                data-timeline-no-press-hold="true"
-                                data-no-press-hold="true"
-                                initial={{ opacity: 0, scale: 0.96, y: 3 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.96, y: 3 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="absolute bottom-[72px] left-0 right-0 px-4 pointer-events-auto flex items-center justify-center text-center z-30"
-                              >
-                                <p className="text-white text-center font-display text-[12px] xs:text-[13px] font-medium leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] max-w-[90%] mx-auto [text-wrap:balance]">
-                                  {activeExplanationText}
-                                </p>
-                              </motion.div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </AnimatePresence>
-
                     {/* Section Name (Page Title) on the right end of the line */}
                     <div 
                       data-timeline-no-press-hold="true"
                       data-no-press-hold="true"
                       role="button"
                       tabIndex={0}
-                      aria-label={`Ver informações da seção ${activeProcess.secao}`}
-                      aria-expanded={isPhasePinned}
+                      aria-label={`Fase ${activeProcess.secao}. Clique para ver explicação`}
                       className="relative font-display font-semibold text-right flex flex-col justify-center items-end px-3.5 sm:px-5 rounded-lg text-white/95 uppercase select-none transition-all duration-300 pointer-events-auto cursor-pointer h-[44px] sm:h-[50px] md:h-[54px] hover:bg-white/[0.02] focus:outline-none focus:ring-2 focus:ring-white/40"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsPhasePinned(!isPhasePinned);
-                        setIsBlockPinned(false);
+                        triggerPhaseExplanation();
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
                           e.stopPropagation();
-                          setIsPhasePinned(!isPhasePinned);
-                          setIsBlockPinned(false);
+                          triggerPhaseExplanation();
                         }
                       }}
                     >
-                      {/* Slow pulsing outer wave ring - perfect rectangle of the same size as the badge */}
-                      <motion.div
-                        className="absolute -inset-1 rounded-lg pointer-events-none"
-                        style={{
-                          border: "1.5px solid rgba(255, 255, 255, 0.22)",
-                          transform: 'translateZ(0)'
-                        }}
-                        animate={{
-                          scale: [1, 1.12, 1],
-                          opacity: [0.12, 0.4, 0.12],
-                        }}
-                        transition={{
-                          duration: 4.0,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
-                      {/* Inner subtle boundary ring */}
+                      {/* Top Mini Tag & Subtitle */}
                       <div 
-                        className="absolute inset-0 rounded-lg pointer-events-none"
-                        style={{ 
-                          border: `1px solid rgba(255, 255, 255, 0.08)`,
-                          transform: 'translateZ(0)'
-                        }}
-                      />
-                      <div 
-                        className="relative flex flex-col items-end justify-center"
-                        style={{ transform: 'translateZ(0)' }}
+                        data-timeline-no-press-hold="true"
+                        data-no-press-hold="true"
+                        className="flex flex-col items-end pointer-events-none"
                       >
                         {line2 ? (
                           <>
-                            <span className="text-[10px] sm:text-[11px] text-white/55 font-medium tracking-wider leading-none mb-0.5 sm:mb-1">{line1}</span>
+                            <span className="text-[10px] sm:text-[11px] text-white/70 font-dmsans font-semibold tracking-wider uppercase leading-none mb-0.5 sm:mb-1">{line1}</span>
                             <span className="text-[14px] sm:text-[16px] leading-none tracking-widest font-bold">{line2}</span>
                           </>
                         ) : (
@@ -1056,52 +1050,59 @@ export default function TimelineSection() {
                         )}
                       </div>
                     </div>
-
                   </motion.div>
 
                   {/* Below the Line Section (Title + Description) */}
                   <motion.div
                     variants={{
-                      initial: { opacity: 0 },
+                      initial: { opacity: 1 },
                       animate: { 
-                        opacity: 1,
+                        opacity: 1, 
                         transition: {
-                          duration: isNavDragging ? 0.04 : 0.7,
-                          ease: [0.16, 1, 0.3, 1]
+                          duration: isNavDragging ? 0.04 : 0.15,
+                          ease: "easeOut"
                         }
                       },
                       exit: { 
-                        opacity: 0,
+                        opacity: 0, 
                         transition: {
-                          duration: isNavDragging ? 0.04 : 0.22,
+                          duration: isNavDragging ? 0.04 : 0.12,
                           ease: "easeInOut"
                         }
                       }
                     }}
                     style={{
-                      opacity: isHoldingBackground ? 0 : 1,
+                      opacity: isHidden ? 0 : 1,
                       transition: 'opacity 0.25s ease-out',
-                      pointerEvents: isHoldingBackground ? 'none' : 'auto'
+                      pointerEvents: isHidden ? 'none' : 'auto'
                     }}
-                    className="absolute top-full left-4 right-4 sm:left-6 sm:right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-[780px] lg:max-w-[900px] xl:max-w-[1080px] 2xl:max-w-[1240px] pt-7 sm:pt-5 md:pt-5 pb-8 sm:pb-8 md:pb-12 flex justify-center pointer-events-auto"
+                    className="absolute top-full left-4 right-4 sm:left-6 sm:right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-[780px] lg:max-w-[900px] xl:max-w-[1080px] 2xl:max-w-[1240px] pt-5 sm:pt-5 md:pt-5 pb-12 sm:pb-8 md:pb-12 flex justify-center pointer-events-auto"
                   >
                     
                     {/* Main Row Container holding the Content Column and the Side Floating Navigation rail */}
                     <div className="w-full md:max-w-[700px] lg:max-w-[800px] xl:max-w-[900px] flex flex-row items-stretch relative">
                       
                       {/* Left: Content Column (Spans 100% width on mobile) */}
-                      <div className="flex-1 flex flex-col items-start gap-7 sm:gap-8 md:gap-10">
+                      <div className="flex-1 flex flex-col items-start gap-4 xs:gap-5 sm:gap-8 md:gap-10">
                         {/* Display Title */}
                         <motion.h2 
+                          role="button"
+                          tabIndex={0}
+                          aria-label="Alternar visibilidade dos cards"
+                          title="Clique para alternar visibilidade dos cards"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            triggerToggleCards();
+                          }}
                           variants={{
                             initial: { opacity: 0, y: isNavDragging ? 0 : 18 },
                             animate: { 
                               opacity: 1, 
                               y: 0,
                               transition: {
-                                delay: isNavDragging ? 0 : 0.08,
-                                opacity: { duration: isNavDragging ? 0.04 : 1.0, ease: [0.16, 1, 0.3, 1] },
-                                y: { duration: isNavDragging ? 0.04 : 1.1, ease: [0.16, 1, 0.3, 1] }
+                                delay: isNavDragging ? 0 : 0.04,
+                                opacity: { duration: isNavDragging ? 0.04 : 0.35, ease: "easeOut" },
+                                y: { duration: isNavDragging ? 0.04 : 0.4, ease: "easeOut" }
                               }
                             },
                             exit: { 
@@ -1113,61 +1114,61 @@ export default function TimelineSection() {
                               }
                             }
                           }}
-                          className="text-[21px] font-display font-bold text-white leading-[1.3] sm:text-[35px] sm:leading-[1.2] tracking-tight w-full sm:w-[920px] h-[5.2em] min-h-[5.2em] max-h-[5.2em] overflow-hidden line-clamp-4 sm:h-[3.6em] sm:min-h-[3.6em] sm:max-h-[3.6em] sm:line-clamp-3 text-justify"
+                          className="text-[21px] font-cargiona font-bold text-white leading-[1.3] sm:text-[35px] sm:leading-[1.2] tracking-tight w-full sm:w-[920px] h-[5.2em] min-h-[5.2em] max-h-[5.2em] overflow-hidden line-clamp-4 sm:h-[3.6em] sm:min-h-[3.6em] sm:max-h-[3.6em] sm:line-clamp-3 text-justify cursor-pointer select-none"
                           dangerouslySetInnerHTML={{ __html: activeProcess.titulo }}
                         />
 
                         {/* Combined Cards + Mobile Bullet points container */}
-                        <div className="w-full flex flex-row items-stretch gap-2.5 sm:gap-0">
+                        <div 
+                          className="w-full flex flex-row items-stretch gap-2.5 sm:gap-0 transition-opacity duration-300"
+                          style={{
+                            opacity: areCardsHidden || isHoldingBackground ? 0 : 1,
+                            pointerEvents: areCardsHidden || isHoldingBackground ? 'none' : 'auto'
+                          }}
+                        >
                           {/* Three Transparent Topics Cards */}
                           {activeProcess.topicos && (
                             <div 
-                              className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-6 lg:gap-8 w-full pt-1 sm:pt-2.5"
+                              data-timeline-no-press-hold="true"
+                              data-no-press-hold="true"
+                              className="w-full grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3.5 md:gap-4 pointer-events-auto"
                             >
                               {activeProcess.topicos.map((topico, tIdx) => {
-                                 const TopicIcon = topico.icon;
-                                 return (
-                                  <motion.div 
+                                const TopicIcon = topico.icon;
+                                return (
+                                  <motion.div
                                     key={tIdx} 
                                     data-no-press-hold="true"
                                     variants={{
-                                      initial: { opacity: 0, y: isNavDragging ? 0 : 16 },
-                                      animate: {
-                                        opacity: isHoldingBackground ? 0 : 1,
+                                      initial: { opacity: 1, y: 0 },
+                                      animate: { 
+                                        opacity: 1, 
                                         y: 0,
                                         transition: {
-                                          delay: isNavDragging ? 0 : 0.16 + tIdx * 0.1,
-                                          opacity: { duration: isNavDragging ? 0.04 : 1.15, ease: [0.16, 1, 0.3, 1] },
-                                          y: { duration: isNavDragging ? 0.04 : 1.25, ease: [0.16, 1, 0.3, 1] }
+                                          duration: isNavDragging ? 0.04 : 0.15,
+                                          ease: "easeOut"
                                         }
                                       },
                                       exit: { 
                                         opacity: 0, 
-                                        y: isNavDragging ? 0 : -8,
                                         transition: {
-                                          opacity: { duration: isNavDragging ? 0.04 : 0.16, ease: "easeIn" },
-                                          y: { duration: isNavDragging ? 0.04 : 0.16, ease: "easeIn" }
+                                          opacity: { duration: isNavDragging ? 0.04 : 0.12, ease: "easeIn" }
                                         }
                                       }
                                     }}
-                                    className="w-full timeline-card bg-white/[0.04] border border-white/[0.08] p-2.5 xs:p-3 sm:p-4 rounded-xl text-left select-none flex flex-col gap-1 sm:gap-3"
+                                    className="timeline-card rounded-xl p-3 sm:p-4 text-left transition-all duration-300 hover:border-white/25 hover:bg-white/[0.07] flex flex-row sm:flex-col items-center sm:items-start gap-2.5 sm:gap-2 pointer-events-auto"
                                   >
-                                    {/* Header: Icon and Title on the side */}
-                                    <div className="flex items-center gap-2 sm:gap-3 w-full">
-                                      {TopicIcon && (
-                                        <div className="flex-shrink-0 text-white/95 bg-white/12 w-[30px] h-[30px] xs:w-[36px] xs:h-[36px] sm:w-[42px] sm:h-[42px] rounded-lg flex items-center justify-center">
-                                          <TopicIcon className="w-4.5 h-4.5 sm:w-5.5 sm:h-5.5" />
-                                        </div>
-                                      )}
-                                      <h4 className="text-white font-semibold text-[15px] xs:text-[15.5px] sm:text-[17px] leading-snug flex-1">
+                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/90 shrink-0">
+                                      <TopicIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[1.8]" />
+                                    </div>
+                                    <div className="flex flex-col min-w-0">
+                                      <h4 className="text-[13px] sm:text-[14px] font-cargiona font-semibold text-white tracking-wide truncate">
                                         {topico.titulo}
                                       </h4>
+                                      <p className="text-[11px] sm:text-[12px] font-dmsans text-white/70 leading-tight mt-0.5 line-clamp-2">
+                                        {topico.descricao}
+                                      </p>
                                     </div>
-                                    
-                                    {/* Description below */}
-                                    <p className="text-white/75 text-[13.5px] xs:text-[13.5px] sm:text-[14px] font-bold leading-[1.4] w-full line-clamp-2 sm:line-clamp-3 h-[2.8em] sm:h-[4.2em] overflow-hidden">
-                                      {topico.descricao}
-                                    </p>
                                   </motion.div>
                                 );
                               })}

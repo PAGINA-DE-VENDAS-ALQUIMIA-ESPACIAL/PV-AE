@@ -388,16 +388,18 @@ export default function App() {
           {/* Top Eyebrow & Centered Headline Header (Div 1) - Positioned cleanly on mobile */}
           <div className="flex flex-col items-center justify-center text-center w-full mt-1 sm:mt-0 lg:-mt-[40px] mb-[28vh] xs:mb-[32vh] sm:mb-[38vh] md:mb-[50vh] lg:mb-[55vh]">
             {/* Eyebrow / Tag on top, centered with dark olive pulsing dot - Sleek compact translucent green badge */}
-            <span className="inline-flex items-center justify-center gap-1.5 sm:gap-2 mx-auto mt-0 mb-4 sm:mb-8 lg:mb-10 h-[25px] xs:h-[26px] sm:h-[28px] px-3.5 sm:px-4 rounded-full bg-[#726910]/40 backdrop-blur-md transition-transform hover:scale-[1.02]">
+            <span className="inline-flex items-center justify-center gap-1.5 sm:gap-2.5 mx-auto mt-0 mb-4 sm:mb-8 lg:mb-10 h-[25px] xs:h-[26px] sm:h-[28px] px-4.5 xs:px-5 sm:px-6 rounded-full bg-[#726910]/40 backdrop-blur-md transition-transform hover:scale-[1.02]">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#726910] animate-pulse shrink-0 shadow-[0_0_6px_rgba(114,105,16,0.8)]" />
-              <span className="tracking-wider text-white font-sans font-normal text-[9.5px] xs:text-[10px] sm:text-[12px] leading-[10px] sm:leading-[14px] uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">DISPONÍVEL PARA NOVOS PROJETOS</span>
+              <span className="tracking-wider text-white font-sans font-normal text-[10.5px] xs:text-[11.5px] sm:text-[13px] leading-none uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">DISPONÍVEL PARA NOVOS PROJETOS</span>
             </span>
 
-            {/* Main Title, centered layout without overflow distortion */}
-            <h1 className="mt-1 sm:mt-3 lg:mt-5 text-[30px] xs:text-[34px] sm:text-4xl md:text-6xl lg:text-[72px] xl:text-[80px] font-normal tracking-tight leading-[1.08] sm:leading-[1.04] text-white w-full max-w-6xl mx-auto text-center flex flex-col items-center justify-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] px-0">
-              <span className="block text-center w-full whitespace-nowrap">O <span className="font-serif italic font-normal text-white">potencial do seu espaço</span></span>
+            {/* Main Title, centered layout with generous mobile width, refined desktop scale, and tighter line spacing */}
+            <h1 className="mt-1 sm:mt-3 lg:mt-5 text-[31px] xs:text-[35px] sm:text-[46px] md:text-[58px] lg:text-[76px] xl:text-[85px] 2xl:text-[88px] font-cargiona font-normal tracking-tight leading-[1.02] xs:leading-[1.0] sm:leading-[0.98] lg:leading-[0.96] text-white w-full max-w-full sm:max-w-[1180px] mx-auto text-center flex flex-col items-center justify-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] px-0">
               <span className="block text-center w-full whitespace-nowrap">
-                <span className="font-serif italic font-normal text-white">é maior</span> do que você <span className="font-serif italic font-normal text-white">imagina.</span>
+                O <span className="font-serif italic font-normal text-white text-[1.15em] px-0.5 sm:px-1.5 inline-block">potencial</span> do seu espaço
+              </span>
+              <span className="block text-center w-full whitespace-nowrap -mt-0.5 sm:-mt-1 lg:-mt-2">
+                <span className="font-serif italic font-normal text-white">é maior</span> do que você <span className="font-serif italic font-normal text-white text-[1.08em] px-0.5 inline-block">imagina.</span>
               </span>
             </h1>
           </div>
@@ -411,9 +413,9 @@ export default function App() {
                 <div className="absolute -inset-8 sm:-inset-12 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45)_0%,rgba(0,0,0,0.15)_55%,transparent_85%)] blur-2xl pointer-events-none -z-10" />
 
                 <p className="text-white text-[20px] sm:text-[21px] lg:text-[26px] leading-[28px] lg:leading-[34px] text-justify lg:text-left w-full font-normal not-italic [font-family:Arial,sans-serif] relative z-10 drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">
-                  Das <span className="font-serif italic font-bold text-[1.12em]">ideias soltas</span> à <span className="font-serif italic font-bold text-[1.12em]">visão clara</span>, existe um caminho que {' '}<br className="hidden lg:inline" />
-                  transforma as <span className="font-serif italic font-bold text-[1.12em]">possibilidades</span> do seu espaço em <span className="font-serif italic font-bold text-[1.12em]">decisões </span>{' '}<br className="hidden lg:inline" />
-                  <span className="font-serif italic font-bold text-[1.12em]">seguras</span> de projeto — <span className="font-serif italic font-bold text-[1.12em]">sessão por sessão, no seu ritmo</span>.
+                  Das <span className="font-serif italic font-normal text-[1.12em]">ideias soltas</span> à <span className="font-serif italic font-normal text-[1.12em]">visão clara</span>, existe um caminho que {' '}<br className="hidden lg:inline" />
+                  transforma as <span className="font-serif italic font-normal text-[1.12em]">possibilidades</span> do seu espaço em <span className="font-serif italic font-normal text-[1.12em]">decisões </span>{' '}<br className="hidden lg:inline" />
+                  <span className="font-serif italic font-normal text-[1.12em]">seguras</span> de projeto — <span className="font-serif italic font-normal text-[1.12em]">sessão por sessão, no seu ritmo</span>.
                 </p>
               </div>
 
@@ -489,7 +491,7 @@ export default function App() {
 
                     {/* Label Text */}
                     <div className="flex items-center gap-1.5 order-1 lg:order-2 lg:mb-1.5 text-white relative z-10 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
-                      <span className="font-bold uppercase tracking-tight text-xs sm:text-sm text-white group-hover:text-amber-300 transition-colors">SAIBA MAIS</span>
+                      <span className="font-bold uppercase tracking-tight text-xs sm:text-sm lg:text-base text-white group-hover:text-amber-300 transition-colors">SAIBA MAIS</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0 shadow-[0_0_8px_rgba(245,194,122,0.8)]" />
                     </div>
 
@@ -542,7 +544,7 @@ export default function App() {
           {/* Scrolling Track (Duplicated for Seamless Infinite Loop) */}
           <div className="animate-marquee flex items-center gap-2.5 sm:gap-5">
             {[1, 2].map((loopIndex) => (
-              <div key={loopIndex} className="flex items-center gap-2.5 sm:gap-5 shrink-0">
+              <div key={loopIndex} className="flex items-center gap-2.5 sm:gap-5 shrink-0 font-cargiona">
                 {/* Card 1 */}
                 <div 
                   onClick={() => triggerHighlight(`card-arch-${loopIndex}`)}
@@ -552,8 +554,8 @@ export default function App() {
                       : 'bg-white/20 backdrop-blur-md border-white/30 hover:bg-[#781A1A] hover:border-[#781A1A] text-white'
                   }`}
                 >
-                  <h4 className="text-base sm:text-lg md:text-[20px] lg:text-[22px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Arquitetura</h4>
-                  <p className="text-xs sm:text-xs md:text-[13px] lg:text-[14px] font-medium truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Terrenos Livres</p>
+                  <h4 className="text-[20px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Arquitetura</h4>
+                  <p className="text-[16px] font-normal not-italic no-underline truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Terrenos Livres</p>
                 </div>
 
                 {/* Card 2 */}
@@ -565,8 +567,8 @@ export default function App() {
                       : 'bg-white/20 backdrop-blur-md border-white/30 hover:bg-[#781A1A] hover:border-[#781A1A] text-white'
                   }`}
                 >
-                  <h4 className="text-base sm:text-lg md:text-[20px] lg:text-[22px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Reformas</h4>
-                  <p className="text-xs sm:text-xs md:text-[13px] lg:text-[14px] font-medium truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Alterar Construções</p>
+                  <h4 className="text-[20px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Reformas</h4>
+                  <p className="text-[16px] font-normal not-italic no-underline truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Alterar Construções</p>
                 </div>
 
                 {/* Card 3 */}
@@ -578,8 +580,8 @@ export default function App() {
                       : 'bg-white/20 backdrop-blur-md border-white/30 hover:bg-[#781A1A] hover:border-[#781A1A] text-white'
                   }`}
                 >
-                  <h4 className="text-base sm:text-lg md:text-[20px] lg:text-[22px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Interiores</h4>
-                  <p className="text-xs sm:text-xs md:text-[13px] lg:text-[14px] font-medium truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Espaços Harmônicos</p>
+                  <h4 className="text-[20px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Interiores</h4>
+                  <p className="text-[16px] font-normal not-italic no-underline truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Espaços Harmônicos</p>
                 </div>
 
                 {/* Card 4 */}
@@ -591,8 +593,8 @@ export default function App() {
                       : 'bg-white/20 backdrop-blur-md border-white/30 hover:bg-[#781A1A] hover:border-[#781A1A] text-white'
                   }`}
                 >
-                  <h4 className="text-base sm:text-lg md:text-[20px] lg:text-[22px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Paisagismo</h4>
-                  <p className="text-xs sm:text-xs md:text-[13px] lg:text-[14px] font-medium truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Áreas Externas</p>
+                  <h4 className="text-[20px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Paisagismo</h4>
+                  <p className="text-[16px] font-normal not-italic no-underline truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Áreas Externas</p>
                 </div>
 
                 {/* Card 5 */}
@@ -604,8 +606,8 @@ export default function App() {
                       : 'bg-white/20 backdrop-blur-md border-white/30 hover:bg-[#781A1A] hover:border-[#781A1A] text-white'
                   }`}
                 >
-                  <h4 className="text-base sm:text-lg md:text-[20px] lg:text-[22px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Urbanismo</h4>
-                  <p className="text-xs sm:text-xs md:text-[13px] lg:text-[14px] font-medium truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors">Praças e Parques</p>
+                  <h4 className="text-[20px] leading-snug font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Urbanismo</h4>
+                  <p className="text-[16px] font-normal not-italic no-underline truncate text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)] group-hover:text-white transition-colors font-cargiona">Praças e Parques</p>
                 </div>
               </div>
             ))}
@@ -643,10 +645,10 @@ export default function App() {
           {/* Section Headline Above Video - Clean responsive typography with tighter line spacing and light gray shadow */}
           <div className="mb-2 sm:mb-1 text-center w-[92vw] min-w-[280px] max-w-[370px] sm:max-w-none sm:w-[500px] md:w-[620px] lg:w-[760px] mx-auto px-1 flex flex-col items-center relative z-20">
             <h2 className="flex flex-col items-center justify-center w-full text-center tracking-tight drop-shadow-[0_2px_14px_rgba(0,0,0,0.8)]">
-              <span className="font-sans font-medium text-white tracking-wide text-[22px] xs:text-[25px] sm:text-[30px] md:text-[32px] lg:text-[35px] leading-tight drop-shadow-[0_2px_8px_rgba(220,220,220,0.3)]">
+              <span className="font-cargiona font-normal text-white tracking-wide text-[24px] xs:text-[27px] sm:text-[34px] md:text-[40px] lg:text-[45px] leading-tight drop-shadow-[0_2px_8px_rgba(220,220,220,0.3)]">
                 Entenda o programa
               </span>
-              <span className="font-serif italic font-normal text-white text-[38px] xs:text-[44px] sm:text-[50px] md:text-[54px] lg:text-[60px] -mt-2 xs:-mt-2.5 sm:-mt-3.5 md:-mt-4 leading-tight drop-shadow-[0_2px_10px_rgba(220,220,220,0.35)]">
+              <span className="font-serif italic font-normal text-white text-[35px] xs:text-[40px] sm:text-[50px] md:text-[58px] lg:text-[66px] -mt-2.5 xs:-mt-3 sm:-mt-4 lg:-mt-5 leading-tight drop-shadow-[0_2px_10px_rgba(220,220,220,0.35)]">
                 Alquimia Espacial
               </span>
             </h2>

@@ -216,12 +216,16 @@ export function BackgroundFrames() {
       }
     };
 
-    // Resize canvas with device-calibrated DPR
+    // Resize canvas with device-calibrated DPR and dynamic mobile viewport height
     const updateCanvasDimensions = () => {
       if (!canvas) return;
       const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       const width = window.innerWidth;
-      const height = window.innerHeight;
+      const height = Math.max(
+        window.innerHeight,
+        document.documentElement.clientHeight || 0,
+        window.visualViewport ? Math.round(window.visualViewport.height) : 0
+      );
 
       const targetW = Math.round(width * dpr);
       const targetH = Math.round(height * dpr);
@@ -339,6 +343,9 @@ export function BackgroundFrames() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateCanvasDimensions, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateCanvasDimensions, { passive: true });
+    }
 
     // Page Visibility API handler: pauses background loop on tab switch
     const onVisibilityChange = () => {
@@ -369,6 +376,9 @@ export function BackgroundFrames() {
       clearTimeout(settleTimeout);
       window.removeEventListener('resize', updateCanvasDimensions);
       window.removeEventListener('scroll', onScroll);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateCanvasDimensions);
+      }
       document.removeEventListener('visibilitychange', onVisibilityChange);
       if (resizeObserver) {
         resizeObserver.disconnect();
@@ -383,14 +393,14 @@ export function BackgroundFrames() {
 
   return (
     <div 
-      className="bg-frames-root fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0 select-none"
+      className="bg-frames-root fixed inset-0 w-full h-full min-h-[100dvh] overflow-hidden pointer-events-none z-0 select-none"
       aria-hidden="true"
       role="presentation"
       tabIndex={-1}
     >
       <canvas
         ref={canvasRef}
-        className="bg-frames-canvas w-full h-full object-cover block pointer-events-none"
+        className="bg-frames-canvas w-full h-full min-h-[100dvh] object-cover block pointer-events-none"
         aria-hidden="true"
       />
     </div>

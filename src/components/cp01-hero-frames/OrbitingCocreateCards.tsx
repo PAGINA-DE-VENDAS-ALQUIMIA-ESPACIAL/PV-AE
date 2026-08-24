@@ -663,13 +663,13 @@ export const OrbitingCocreateCards: React.FC<OrbitingCocreateCardsProps> = ({
                     className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4 sm:gap-6 relative z-50 my-auto px-2 sm:px-6 pointer-events-none py-6"
                   >
                     {/* Left Flanking Text (Positioned to the left of center card on Desktop, top on Mobile) */}
-                    <div className="text-center md:text-right w-full max-w-[310px] sm:max-w-[340px] md:max-w-[210px] lg:max-w-[250px] shrink-0 md:absolute md:right-[calc(50%+225px)] lg:right-[calc(50%+255px)] xl:right-[calc(50%+270px)]">
-                      <span className={`text-xs sm:text-sm font-mono font-bold tracking-widest uppercase block mb-1 ${
+                    <div className="text-center md:text-right w-full max-w-[330px] sm:max-w-[360px] md:max-w-[210px] lg:max-w-[250px] shrink-0 md:absolute md:right-[calc(50%+225px)] lg:right-[calc(50%+255px)] xl:right-[calc(50%+270px)]">
+                      <span className={`text-[13px] sm:text-[14px] font-mono font-bold tracking-widest uppercase block mb-1 ${
                         isModalReopenedGreen ? 'text-[#D4C550]' : 'text-amber-400'
                       }`}>
                         Conceito {activeNum}
                       </span>
-                      <h3 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white leading-tight font-sans transition-all duration-300">
+                      <h3 className="text-[26px] sm:text-3xl lg:text-4xl font-light text-white leading-tight font-cargiona transition-all duration-300">
                         {activeCard.category}
                       </h3>
                     </div>
@@ -694,7 +694,7 @@ export const OrbitingCocreateCards: React.FC<OrbitingCocreateCardsProps> = ({
                           {/* Left Frosted Tag Pill */}
                           <div className="bg-white/15 backdrop-blur-md px-3 py-1.5 rounded-full text-white text-xs sm:text-sm font-semibold flex items-center gap-1.5 border-transparent shadow-sm">
                             <ActiveIcon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isModalReopenedGreen ? 'text-[#EFEA99]' : 'text-amber-200'}`} />
-                            <span>{activeCard.shortLabel}</span>
+                            <span className="font-cargiona">{activeCard.shortLabel}</span>
                           </div>
 
                           {/* Middle Tag Pill with 01 / 06 format */}
@@ -715,10 +715,10 @@ export const OrbitingCocreateCards: React.FC<OrbitingCocreateCardsProps> = ({
 
                       {/* Main Content Area */}
                       <div className="my-auto py-3 text-left relative z-10">
-                        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-tight font-sans mb-2 sm:mb-3 drop-shadow-md">
+                        <h2 className="text-[22px] sm:text-[25px] font-extrabold tracking-tight text-white leading-tight font-cargiona mb-2 sm:mb-3 drop-shadow-md">
                           {activeCard.title}
                         </h2>
-                        <p className={`text-sm sm:text-base font-normal leading-relaxed text-justify drop-shadow-sm ${
+                        <p className={`text-[15px] sm:text-[16px] font-normal leading-relaxed text-justify drop-shadow-sm ${
                           isModalReopenedGreen ? 'text-amber-50/95' : 'text-amber-100/95'
                         }`}>
                           {activeCard.desc}
@@ -780,9 +780,9 @@ export const OrbitingCocreateCards: React.FC<OrbitingCocreateCardsProps> = ({
                       </div>
                     </div>
 
-                    {/* Right Flanking Text (Positioned to the right of center card on Desktop, below on Mobile matching card inner text width & justified) */}
-                    <div className="text-justify md:text-left w-full max-w-[270px] sm:max-w-[292px] md:max-w-[210px] lg:max-w-[250px] mx-auto md:mx-0 shrink-0 md:absolute md:left-[calc(50%+225px)] lg:left-[calc(50%+255px)] xl:left-[calc(50%+270px)] relative z-20 pt-1 md:pt-0">
-                      <p className="text-sm sm:text-base text-neutral-200 font-normal leading-relaxed">
+                    {/* Right Flanking Text (Positioned to the right of center card on Desktop, below on Mobile with calibrated optical width & justified) */}
+                    <div className="text-justify md:text-left w-full max-w-[305px] sm:max-w-[330px] md:max-w-[210px] lg:max-w-[250px] mx-auto md:mx-0 shrink-0 md:absolute md:left-[calc(50%+225px)] lg:left-[calc(50%+255px)] xl:left-[calc(50%+270px)] relative z-20 pt-1 md:pt-0">
+                      <p className="text-[15px] sm:text-[16px] text-neutral-200 font-normal leading-relaxed text-justify md:text-left">
                         {activeCard.externalText}
                       </p>
                     </div>
