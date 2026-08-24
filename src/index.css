@@ -1,49 +1,8 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Cargiona';
-  src: url('/fontes/Título - Cargiona-Regular.otf') format('opentype'),
-       url('/fontes/T%C3%ADtulo%20-%20Cargiona-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Cargiona Regular';
-  src: url('/fontes/Título - Cargiona-Regular.otf') format('opentype'),
-       url('/fontes/T%C3%ADtulo%20-%20Cargiona-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Istanbul Type';
-  src: url('/fontes/Corpo - Istanbul Type 300 Light.otf') format('opentype'),
-       url('/fontes/Corpo%20-%20Istanbul%20Type%20300%20Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
 @theme {
   --font-sans: "DM Sans", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", "Instrument Serif", "Newsreader", "Cormorant Garamond", Georgia, serif;
-  --font-cargiona: "Cargiona", "Cargiona Regular", sans-serif;
-  --font-istanbul: "Istanbul Type", sans-serif;
-}
-
-.font-cargiona {
-  font-family: 'Cargiona', 'Cargiona Regular', sans-serif;
-}
-
-.font-istanbul {
-  font-family: 'Istanbul Type', sans-serif;
-}
-
-.font-dmsans {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
 }
 
 /* Scroll Snap calibrado: firme e preciso no desktop (como antes), e imã sutil/leve no mobile */
@@ -224,10 +183,8 @@ body {
 }
 
 .timeline-card {
-  background-color: rgba(255, 255, 255, 0.11);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Keyframes & Animações Plano (Componente 05) */
