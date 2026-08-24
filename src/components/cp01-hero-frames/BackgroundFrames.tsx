@@ -91,8 +91,8 @@ export function BackgroundFrames() {
     const canvasAspect = cw / ch;
 
     // Apply mobile-only zoom and lower focal point anchor so elements (like the house) sit higher on mobile
-    const zoom = isMobile ? 1.22 : 1.0;
-    const verticalAnchor = isMobile ? 0.72 : 0.50; // Anchors focal point towards the lower region, lifting visual elements up
+    const zoom = isMobile ? 1.35 : 1.0;
+    const verticalAnchor = isMobile ? 0.82 : 0.50; // Anchors focal point towards the lower region, lifting visual elements up
 
     let drawWidth = cw;
     let drawHeight = ch;
@@ -216,16 +216,12 @@ export function BackgroundFrames() {
       }
     };
 
-    // Resize canvas with device-calibrated DPR and dynamic mobile viewport height
+    // Resize canvas with device-calibrated DPR
     const updateCanvasDimensions = () => {
       if (!canvas) return;
       const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       const width = window.innerWidth;
-      const height = Math.max(
-        window.innerHeight,
-        document.documentElement.clientHeight || 0,
-        window.visualViewport ? Math.round(window.visualViewport.height) : 0
-      );
+      const height = window.innerHeight;
 
       const targetW = Math.round(width * dpr);
       const targetH = Math.round(height * dpr);

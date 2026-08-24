@@ -977,7 +977,8 @@ export default function TimelineSection() {
                           data-no-press-hold="true"
                           role="button"
                           tabIndex={0}
-                          aria-label={`Categoria ${activeProcess.categoria}. Clique para ver explicação`}
+                          aria-label={`Ver informações do ${activeProcess.categoria}`}
+                          aria-expanded={isBlockPinned}
                           className="relative select-none flex-shrink-0 pointer-events-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -991,11 +992,29 @@ export default function TimelineSection() {
                             }
                           }}
                         >
+                          {/* Slow pulsing wave ring */}
+                          <motion.div
+                            className="absolute -inset-1 rounded-lg pointer-events-none"
+                            style={{ 
+                              border: `1.5px solid ${badge.bg}`,
+                              transform: 'translateZ(0)'
+                            }}
+                            animate={{
+                              scale: [1, 1.12, 1],
+                              opacity: [0.15, 0.4, 0.15],
+                            }}
+                            transition={{
+                              duration: 4.0,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          />
                           <div 
-                            className="inline-flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-sm transition-all duration-300 pointer-events-auto"
+                            className="relative flex items-center gap-2 sm:gap-3 px-3 sm:px-4 rounded-lg text-left shadow-lg select-none border border-white/10 hover:brightness-110 h-[44px] sm:h-[50px] md:h-[54px]"
                             style={{ 
                               backgroundColor: badge.bg,
-                              color: badge.text
+                              color: badge.text,
+                              transform: 'translateZ(0)'
                             }}
                           >
                             <div className="flex-shrink-0">
@@ -1020,7 +1039,8 @@ export default function TimelineSection() {
                       data-no-press-hold="true"
                       role="button"
                       tabIndex={0}
-                      aria-label={`Fase ${activeProcess.secao}. Clique para ver explicação`}
+                      aria-label={`Ver informações da seção ${activeProcess.secao}`}
+                      aria-expanded={isPhasePinned}
                       className="relative font-display font-semibold text-right flex flex-col justify-center items-end px-3.5 sm:px-5 rounded-lg text-white/95 uppercase select-none transition-all duration-300 pointer-events-auto cursor-pointer h-[44px] sm:h-[50px] md:h-[54px] hover:bg-white/[0.02] focus:outline-none focus:ring-2 focus:ring-white/40"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -1034,11 +1054,34 @@ export default function TimelineSection() {
                         }
                       }}
                     >
-                      {/* Top Mini Tag & Subtitle */}
+                      {/* Slow pulsing outer wave ring */}
+                      <motion.div
+                        className="absolute -inset-1 rounded-lg pointer-events-none"
+                        style={{
+                          border: "1.5px solid rgba(255, 255, 255, 0.22)",
+                          transform: 'translateZ(0)'
+                        }}
+                        animate={{
+                          scale: [1, 1.12, 1],
+                          opacity: [0.12, 0.4, 0.12],
+                        }}
+                        transition={{
+                          duration: 4.0,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                      {/* Inner subtle boundary ring */}
                       <div 
-                        data-timeline-no-press-hold="true"
-                        data-no-press-hold="true"
-                        className="flex flex-col items-end pointer-events-none"
+                        className="absolute inset-0 rounded-lg pointer-events-none"
+                        style={{ 
+                          border: `1px solid rgba(255, 255, 255, 0.08)`,
+                          transform: 'translateZ(0)'
+                        }}
+                      />
+                      <div 
+                        className="relative flex flex-col items-end justify-center"
+                        style={{ transform: 'translateZ(0)' }}
                       >
                         {line2 ? (
                           <>
@@ -1136,7 +1179,7 @@ export default function TimelineSection() {
                               {activeProcess.topicos.map((topico, tIdx) => {
                                 const TopicIcon = topico.icon;
                                 return (
-                                  <motion.div
+                                  <motion.div 
                                     key={tIdx} 
                                     data-no-press-hold="true"
                                     variants={{
@@ -1156,19 +1199,24 @@ export default function TimelineSection() {
                                         }
                                       }
                                     }}
-                                    className="timeline-card rounded-xl p-3 sm:p-4 text-left transition-all duration-300 hover:border-white/25 hover:bg-white/[0.07] flex flex-row sm:flex-col items-center sm:items-start gap-2.5 sm:gap-2 pointer-events-auto"
+                                    className="w-full timeline-card p-3 xs:p-3.5 sm:p-4 rounded-xl text-left select-none flex flex-col gap-2.5 sm:gap-3 pointer-events-auto"
                                   >
-                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/90 shrink-0">
-                                      <TopicIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[1.8]" />
-                                    </div>
-                                    <div className="flex flex-col min-w-0">
-                                      <h4 className="text-[13px] sm:text-[14px] font-cargiona font-semibold text-white tracking-wide truncate">
+                                    {/* Header: Icon and Title on the side */}
+                                    <div className="flex items-center gap-2 sm:gap-3 w-full">
+                                      {TopicIcon && (
+                                        <div className="flex-shrink-0 text-white/95 bg-white/10 w-[32px] h-[32px] xs:w-[36px] xs:h-[36px] sm:w-[42px] sm:h-[42px] rounded-lg flex items-center justify-center">
+                                          <TopicIcon className="w-4 h-4 xs:w-4.5 xs:h-4.5 sm:w-5.5 sm:h-5.5 stroke-[1.8]" />
+                                        </div>
+                                      )}
+                                      <h4 className="text-white font-cargiona font-semibold text-[15px] sm:text-[17px] leading-snug flex-1">
                                         {topico.titulo}
                                       </h4>
-                                      <p className="text-[11px] sm:text-[12px] font-dmsans text-white/70 leading-tight mt-0.5 line-clamp-2">
-                                        {topico.descricao}
-                                      </p>
                                     </div>
+                                    
+                                    {/* Description below */}
+                                    <p className="text-white/90 font-dmsans text-[12px] xs:text-[13px] sm:text-[13.5px] md:text-[14px] leading-[1.38] sm:leading-[1.45] w-full">
+                                      {topico.descricao}
+                                    </p>
                                   </motion.div>
                                 );
                               })}
