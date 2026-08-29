@@ -152,9 +152,10 @@ export default function SaaSFeatureSection() {
             className="col-span-4 flex flex-col justify-between pr-6 xl:pr-10 h-full"
           >
             <div className="flex flex-col justify-between h-full py-1">
-              {/* Main Headline - Exact top alignment */}
-              <h2 className="text-[26px] sm:text-[32px] font-normal tracking-tight text-white leading-[28px] sm:leading-[32px] font-sans mt-0 mb-3 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
-                Suas <span className="font-serif italic font-normal text-white">melhores ideias</span><br />merecem um <span className="font-serif italic font-normal text-white">projeto à altura</span>.
+              {/* Main Headline - Cargiona Regular base with Playfair Display Italic highlights */}
+              <h2 className="text-[36px] xl:text-[38px] min-[1440px]:text-[40px] font-normal font-cargiona tracking-tight text-white leading-[1.10] mt-0 mb-4 xl:mb-5 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
+                <span className="block whitespace-nowrap">Suas <span className="font-serif italic font-normal text-white">melhores ideias</span></span>
+                <span className="block -mt-2 whitespace-nowrap">merecem um <span className="font-serif italic font-normal text-white">projeto à altura</span>.</span>
               </h2>
 
               {/* Subheadline Paragraph - Justified on Desktop */}
@@ -319,9 +320,10 @@ export default function SaaSFeatureSection() {
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             className="text-center flex flex-col items-center pt-1 w-full"
           >
-            {/* Headline - Slightly scaled up taking up full side space */}
-            <h2 className="text-[26px] sm:text-[32px] font-normal tracking-tight text-white leading-[28px] sm:leading-[32px] font-sans mb-3.5 sm:mb-4 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)] text-center w-full px-0">
-              Suas <span className="font-serif italic font-normal text-white">melhores ideias</span><br />merecem um <span className="font-serif italic font-normal text-white">projeto à altura</span>.
+            {/* Headline - Cargiona Regular base with Playfair Display Italic highlights */}
+            <h2 className="text-[26px] sm:text-[28px] font-normal font-cargiona tracking-tight text-white leading-[1.08] mb-3 sm:mb-3.5 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)] text-center w-full max-w-[440px] sm:max-w-xl mx-auto px-0">
+              Suas <span className="font-serif italic font-normal text-white">melhores ideias</span>
+              <span className="block -mt-1">merecem um <span className="font-serif italic font-normal text-white">projeto à altura</span>.</span>
             </h2>
             
             {/* Subheadline - Scaled up slightly & wider edge coverage */}

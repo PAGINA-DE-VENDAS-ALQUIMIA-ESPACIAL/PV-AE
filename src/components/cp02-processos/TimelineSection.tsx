@@ -325,6 +325,37 @@ export default function TimelineSection() {
 
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const holdTimerRef = useRef<number | null>(null);
+  const explanationTimerRef = useRef<number | null>(null);
+
+  const triggerBlockExplanation = useCallback(() => {
+    if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+    setIsBlockPinned((prev) => {
+      const next = !prev;
+      if (next) {
+        setIsPhasePinned(false);
+        explanationTimerRef.current = window.setTimeout(() => {
+          setIsBlockPinned(false);
+          explanationTimerRef.current = null;
+        }, 3000);
+      }
+      return next;
+    });
+  }, []);
+
+  const triggerPhaseExplanation = useCallback(() => {
+    if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+    setIsPhasePinned((prev) => {
+      const next = !prev;
+      if (next) {
+        setIsBlockPinned(false);
+        explanationTimerRef.current = window.setTimeout(() => {
+          setIsPhasePinned(false);
+          explanationTimerRef.current = null;
+        }, 3000);
+      }
+      return next;
+    });
+  }, []);
 
   const mouseMoveHandlerRef = useRef<((ev: globalThis.MouseEvent) => void) | null>(null);
   const mouseUpHandlerRef = useRef<(() => void) | null>(null);
@@ -714,6 +745,14 @@ export default function TimelineSection() {
   const line1 = secaoParts[0] || "";
   const line2 = secaoParts[1] || "";
 
+  const activeExplanationText = isHoldingBackground
+    ? null
+    : isBlockPinned 
+    ? blockExplanations[activeProcess.categoria]
+    : isPhasePinned 
+    ? phaseExplanations[activeProcess.secao]
+    : null;
+
   return (
     <div id="timeline-scroll-wrapper" className="relative w-full h-[1200vh] sm:h-[1300vh] bg-transparent">
       
@@ -730,23 +769,65 @@ export default function TimelineSection() {
         onTouchCancel={handleBackgroundTouchEnd}
       >
         
-        {/* Centered headline */}
+        {/* Top headline / Active explanation area - calibrated below the mobile header */}
         <div 
-          className="mt-[20px] absolute top-10 sm:top-12 md:top-14 lg:top-16 left-0 w-full z-30 px-3 sm:px-6 md:px-16 lg:px-24 flex items-center justify-center text-center pointer-events-auto"
+          className="absolute top-24 xs:top-28 sm:top-16 md:top-20 lg:top-24 left-0 w-full z-30 px-4 sm:px-6 md:px-12 lg:px-16 flex items-center justify-center text-center pointer-events-auto min-h-[58px]"
           style={{
             opacity: isHoldingBackground ? 0 : 1,
             transition: 'opacity 0.25s ease-out',
             pointerEvents: isHoldingBackground ? 'none' : 'auto'
           }}
         >
-          <a 
-            href="#timeline-scroll-wrapper" 
-            aria-label="Conheça o processo por trás do seu projeto"
-            className="mt-[20px] text-white/90 font-sans font-normal tracking-normal text-center select-none max-w-full text-[21px] xs:text-[23px] sm:text-[30px] leading-[1.2] sm:leading-snug drop-shadow-md block"
-          >
-            <span className="block sm:inline whitespace-nowrap">Conheça o <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">processo</span></span>{" "}
-            <span className="block sm:inline whitespace-nowrap">por trás do <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">seu projeto</span>.</span>
-          </a>
+          <AnimatePresence mode="wait">
+            {activeExplanationText ? (
+              <motion.div
+                key={`explanation-${activeProcess.numero}-${isBlockPinned ? 'block' : 'phase'}`}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto flex items-center justify-center cursor-pointer px-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (explanationTimerRef.current) clearTimeout(explanationTimerRef.current);
+                  setIsBlockPinned(false);
+                  setIsPhasePinned(false);
+                }}
+              >
+                <p className="text-white/95 text-center font-cargiona text-[15px] xs:text-[16px] sm:text-[18px] md:text-[19.5px] lg:text-[21px] font-normal leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] max-w-full sm:whitespace-nowrap [text-wrap:balance]">
+                  {activeExplanationText}
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="main-headline"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <a 
+                  href="#timeline-scroll-wrapper" 
+                  aria-label="Conheça o processo por trás do seu projeto"
+                  className="font-cargiona font-normal tracking-normal text-center select-none max-w-full text-[26px] xs:text-[28px] sm:text-[30px] md:text-[34px] lg:text-[38px] xl:text-[40px] leading-[1.08] sm:leading-[1.10] drop-shadow-md block cursor-pointer text-white/90"
+                >
+                  <span className="block whitespace-nowrap">
+                    Conheça o{" "}
+                    <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">
+                      processo
+                    </span>
+                  </span>
+                  <span className="block whitespace-nowrap -mt-1 sm:-mt-1 md:-mt-1.5 lg:-mt-2">
+                    por trás do{" "}
+                    <span className="timeline-font-editorial font-editorial italic font-normal text-white tracking-wide">
+                      seu projeto
+                    </span>
+                    .
+                  </span>
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* 
@@ -882,15 +963,13 @@ export default function TimelineSection() {
                           className="relative select-none flex-shrink-0 pointer-events-auto cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setIsBlockPinned(!isBlockPinned);
-                            setIsPhasePinned(false);
+                            triggerBlockExplanation();
                           }}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                               e.preventDefault();
                               e.stopPropagation();
-                              setIsBlockPinned(!isBlockPinned);
-                              setIsPhasePinned(false);
+                              triggerBlockExplanation();
                             }
                           }}
                         >
@@ -935,65 +1014,6 @@ export default function TimelineSection() {
                       );
                     })()}
 
-                    {/* Central Rectangle (Desktop / Tablet / Mobile) */}
-                    <AnimatePresence>
-                      {(() => {
-                        const activeExplanationText = isHoldingBackground
-                          ? null
-                          : isBlockPinned 
-                          ? blockExplanations[activeProcess.categoria]
-                          : isPhasePinned 
-                          ? phaseExplanations[activeProcess.secao]
-                          : null;
-
-                        if (!activeExplanationText) return null;
-
-                        const isBlock = activeExplanationText.length < 110;
-
-                        return (
-                          <>
-                            {!isMobile && (
-                              <motion.div 
-                                data-timeline-no-press-hold="true"
-                                data-no-press-hold="true"
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.25, ease: "easeOut" }}
-                                className="absolute left-1/2 -translate-x-1/2 top-0 h-[44px] sm:h-[50px] md:h-[54px] flex items-center justify-center md:w-[360px] lg:w-[480px] xl:w-[620px] 2xl:w-[740px] px-4 pointer-events-auto"
-                              >
-                                {isBlock ? (
-                                  <p className="text-white text-center font-display text-[11px] md:text-[12px] lg:text-[13.5px] xl:text-[15px] 2xl:text-[16px] font-medium tracking-wide w-full leading-none whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                                    {activeExplanationText}
-                                  </p>
-                                ) : (
-                                  <p className="text-white text-center font-display text-[9.5px] md:text-[10.5px] lg:text-[11.5px] xl:text-[13px] 2xl:text-[14px] font-medium tracking-wide w-full leading-none whitespace-nowrap drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                                    {activeExplanationText}
-                                  </p>
-                                )}
-                              </motion.div>
-                            )}
-
-                            {isMobile && (
-                              <motion.div 
-                                data-timeline-no-press-hold="true"
-                                data-no-press-hold="true"
-                                initial={{ opacity: 0, scale: 0.96, y: 3 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.96, y: 3 }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                className="absolute bottom-[72px] left-0 right-0 px-4 pointer-events-auto flex items-center justify-center text-center z-30"
-                              >
-                                <p className="text-white text-center font-display text-[12px] xs:text-[13px] font-medium leading-snug drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] max-w-[90%] mx-auto [text-wrap:balance]">
-                                  {activeExplanationText}
-                                </p>
-                              </motion.div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </AnimatePresence>
-
                     {/* Section Name (Page Title) on the right end of the line */}
                     <div 
                       data-timeline-no-press-hold="true"
@@ -1005,15 +1025,13 @@ export default function TimelineSection() {
                       className="relative font-display font-semibold text-right flex flex-col justify-center items-end px-3.5 sm:px-5 rounded-lg text-white/95 uppercase select-none transition-all duration-300 pointer-events-auto cursor-pointer h-[44px] sm:h-[50px] md:h-[54px] hover:bg-white/[0.02] focus:outline-none focus:ring-2 focus:ring-white/40"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsPhasePinned(!isPhasePinned);
-                        setIsBlockPinned(false);
+                        triggerPhaseExplanation();
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
                           e.stopPropagation();
-                          setIsPhasePinned(!isPhasePinned);
-                          setIsBlockPinned(false);
+                          triggerPhaseExplanation();
                         }
                       }}
                     >
@@ -1113,7 +1131,7 @@ export default function TimelineSection() {
                               }
                             }
                           }}
-                          className="text-[21px] font-display font-bold text-white leading-[1.3] sm:text-[35px] sm:leading-[1.2] tracking-tight w-full sm:w-[920px] h-[5.2em] min-h-[5.2em] max-h-[5.2em] overflow-hidden line-clamp-4 sm:h-[3.6em] sm:min-h-[3.6em] sm:max-h-[3.6em] sm:line-clamp-3 text-justify"
+                          className="text-[21px] font-cargiona font-bold text-white leading-[1.3] sm:text-[35px] sm:leading-[1.2] tracking-tight w-full sm:w-[920px] h-[5.2em] min-h-[5.2em] max-h-[5.2em] overflow-hidden line-clamp-4 sm:h-[3.6em] sm:min-h-[3.6em] sm:max-h-[3.6em] sm:line-clamp-3 text-justify"
                           dangerouslySetInnerHTML={{ __html: activeProcess.titulo }}
                         />
 
@@ -1159,7 +1177,7 @@ export default function TimelineSection() {
                                           <TopicIcon className="w-4.5 h-4.5 sm:w-5.5 sm:h-5.5" />
                                         </div>
                                       )}
-                                      <h4 className="text-white font-semibold text-[15px] xs:text-[15.5px] sm:text-[17px] leading-snug flex-1">
+                                      <h4 className="text-white font-cargiona font-semibold text-[15px] xs:text-[15.5px] sm:text-[17px] leading-snug flex-1">
                                         {topico.titulo}
                                       </h4>
                                     </div>

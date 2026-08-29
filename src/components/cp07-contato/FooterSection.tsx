@@ -9,9 +9,9 @@ interface FooterSectionProps {
 }
 
 const SOCIAL_LINKS = [
-  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  { icon: Instagram, href: 'https://www.instagram.com/josedealencar.ae', label: 'Instagram' },
   { icon: MessageCircle, href: 'https://whatsapp.com', label: 'WhatsApp' },
-  { icon: Youtube, href: 'https://youtube.com', label: 'YouTube' },
+  { icon: Youtube, href: 'https://www.youtube.com/@AlquimiaEspacial', label: 'YouTube' },
   { icon: Globe, href: '#', label: 'Website' },
 ] as const;
 
@@ -43,12 +43,12 @@ export const FooterSection: React.FC<FooterSectionProps> = ({
         className="relative z-10 overflow-hidden rounded-3xl bg-white border border-stone-200 text-stone-900 p-3.5 sm:p-6 lg:p-7 shadow-xl max-w-6xl mx-auto flex flex-col justify-between gap-2 sm:gap-3"
       >
         
-        {/* Top Section: Tagline on Left, 4 Social Icons on Right */}
+        {/* Top Section: Tagline on the left & Social Icons on the right */}
         <div className="flex flex-row items-center justify-between gap-2 sm:gap-6 pb-2.5 sm:pb-3.5 border-b border-stone-200">
           
           {/* Tagline / Headline on the left - single line on mobile */}
-          <h2 className="text-[14px] sm:text-[24px] lg:text-[28px] font-medium text-stone-900 tracking-tight leading-snug flex-1 lg:flex-none lg:w-[650px] mr-1.5 sm:mr-[15px] lg:ml-[55px] whitespace-nowrap font-['Playfair_Display'] italic">
-            Seu espaço. Sua essência. Seu projeto.
+          <h2 className="text-[14px] sm:text-[24px] lg:text-[28px] font-normal text-stone-900 tracking-tight leading-snug flex-1 lg:flex-none lg:w-[650px] mr-1.5 sm:mr-[15px] lg:ml-[55px] whitespace-nowrap font-cargiona">
+            Seu <span className="font-serif italic font-medium">espaço.</span> Sua <span className="font-serif italic font-medium">essência.</span> Seu <span className="font-serif italic font-medium">projeto.</span>
           </h2>
 
           {/* Right Column: 4 Social Media Icons horizontally aligned */}

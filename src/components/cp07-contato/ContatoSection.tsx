@@ -71,20 +71,24 @@ export default function App() {
             {/* Conteúdo sobreposto: Headline e Botão exatamente posicionados */}
             <div className="absolute inset-0 w-full max-w-7xl mx-auto px-6 xs:px-8 sm:px-12 py-2 xs:py-2.5 sm:py-7 flex flex-col justify-between items-start z-10 pointer-events-none">
               
-              {/* Metade Superior: Headline ajustada */}
+              {/* Metade Superior: Headline ajustada com padrão Cargiona + Playfair Display */}
               <motion.div 
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full max-w-[340px] xs:max-w-[380px] sm:max-w-[560px] lg:max-w-[650px] mt-[4px] xs:mt-[8px] sm:mt-2"
+                className="w-full max-w-[260px] xs:max-w-[290px] sm:max-w-[500px] lg:max-w-[580px] mt-[2px] xs:mt-[4px] sm:mt-2"
               >
                 <h2 
-                  className="font-sans font-normal text-stone-950 tracking-tight text-left leading-[28px] sm:leading-[32px] text-[22px] xs:text-[24px] sm:text-[28px] lg:text-[32px] not-italic drop-shadow-[0_1px_2px_rgba(255,255,255,0.7)]"
+                  className="font-cargiona font-normal text-stone-950 tracking-tight text-left text-[19px] xs:text-[22px] sm:text-[36px] lg:text-[40px] leading-[1.08] sm:leading-[1.10] not-italic drop-shadow-[0_1px_2px_rgba(255,255,255,0.7)]"
                 >
-                  Pronto para descobrir<br />
-                  o <span className="font-serif italic font-normal">verdadeiro potencial</span><br />
-                  do <span className="font-serif italic font-normal">seu espaço?</span>
+                  <span className="block">Pronto para descobrir</span>
+                  <span className="block -mt-0.5 sm:-mt-2">
+                    o <span className="font-serif italic font-normal">verdadeiro potencial</span>
+                  </span>
+                  <span className="block -mt-0.5 sm:-mt-2">
+                    do <span className="font-serif italic font-normal">seu espaço?</span>
+                  </span>
                 </h2>
               </motion.div>
 
@@ -102,8 +106,8 @@ export default function App() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-between gap-3 sm:gap-4 py-2 pl-4 sm:pl-6 pr-1.5 sm:pr-2 rounded-xl sm:rounded-2xl bg-white hover:bg-[#781A1A] text-stone-950 hover:text-white font-bold text-xs sm:text-base uppercase tracking-tight transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 group focus-visible:ring-2 focus-visible:ring-[#781A1A] focus-visible:outline-none cursor-pointer border-transparent"
                 >
-                  <span className="sm:hidden whitespace-nowrap text-xs text-stone-950 group-hover:text-white transition-colors">QUERO TRANSFORMAR</span>
-                  <span className="hidden sm:inline whitespace-nowrap text-stone-950 group-hover:text-white transition-colors">QUERO TRANSFORMAR MEU ESPAÇO</span>
+                  <span className="sm:hidden whitespace-nowrap text-xs text-stone-950 group-hover:text-white transition-colors">TRANSFORMAR</span>
+                  <span className="hidden sm:inline whitespace-nowrap text-stone-950 group-hover:text-white transition-colors">TRANSFORMAR</span>
                   <span className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-lg sm:rounded-xl bg-black text-white group-hover:bg-white transition-colors shrink-0">
                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white group-hover:text-[#781A1A] transition-colors" />
                   </span>

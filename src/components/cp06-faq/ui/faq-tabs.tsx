@@ -34,7 +34,7 @@ export interface FAQProps {
 }
 
 export const FAQ: React.FC<FAQProps> = React.memo(({
-  title = "Clareza antes de decidir",
+  title = "Mais clareza,\nmenos dúvidas",
   subtitle = "Conhecer o processo é tão importante quanto conhecer o resultado. Aqui estão as respostas para as dúvidas mais comuns sobre Alquimia Espacial.",
   categories,
   faqData,
@@ -165,23 +165,38 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
 
   // Renderiza o título destacando as palavras "clareza" e "dúvidas" em itálico na fonte serifada
   const formattedTitle = useMemo(() => {
+    let rawLines: string[];
+    if (title.includes('\n')) {
+      rawLines = title.split('\n');
+    } else if (title.includes('Mais clareza, menos dúvidas')) {
+      rawLines = ['Mais clareza,', 'menos dúvidas'];
+    } else {
+      rawLines = [title];
+    }
+
     const regex = /(clareza|dúvidas|duvidas|decidir)/gi;
-    const parts = title.split(regex);
-    return parts.map((part, i) => {
-      const lower = part.toLowerCase();
-      if (lower === 'clareza' || lower === 'dúvidas' || lower === 'duvidas' || lower === 'decidir') {
-        return (
-          <span
-            key={`title-highlight-${i}`}
-            className={`font-serif italic font-normal px-0.5 sm:px-1 ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}
-          >
-            {part}
-          </span>
-        );
-      }
-      return <React.Fragment key={`title-part-${i}`}>{part}</React.Fragment>;
+    return rawLines.map((line, lineIdx) => {
+      const parts = line.split(regex);
+      return (
+        <span key={`line-${lineIdx}`} className="block">
+          {parts.map((part, i) => {
+            const lower = part.toLowerCase();
+            if (lower === 'clareza' || lower === 'dúvidas' || lower === 'duvidas' || lower === 'decidir') {
+              return (
+                <span
+                  key={`title-highlight-${lineIdx}-${i}`}
+                  className={`font-serif italic font-normal px-0.5 sm:px-1 ${
+                    isDark ? 'text-white' : 'text-slate-900'
+                  }`}
+                >
+                  {part}
+                </span>
+              );
+            }
+            return <React.Fragment key={`title-part-${lineIdx}-${i}`}>{part}</React.Fragment>;
+          })}
+        </span>
+      );
     });
   }, [title, isDark]);
 
@@ -206,7 +221,7 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
     <section
       ref={containerRef}
       aria-label="Perguntas Frequentes"
-      className={`relative w-full pt-20 sm:pt-24 lg:pt-24 pb-8 sm:pb-12 md:py-14 px-3 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300 ${
+      className={`relative w-full pt-24 sm:pt-26 lg:pt-24 pb-8 sm:pb-12 md:py-14 px-3 sm:px-6 lg:px-8 font-sans overflow-hidden transition-colors duration-300 ${
         isDark ? 'bg-black text-white selection:bg-zinc-800 selection:text-white' : 'bg-white text-slate-900 selection:bg-slate-200 selection:text-slate-900'
       } ${className}`}
     >
@@ -221,7 +236,7 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
           <motion.h2 
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`text-[26px] sm:text-[32px] font-normal tracking-tight font-sans leading-[28px] sm:leading-[32px] ${
+            className={`text-[26px] sm:text-[28px] md:text-[38px] lg:text-[40px] font-normal font-cargiona tracking-tight leading-[1.08] md:leading-[1.10] ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}
           >

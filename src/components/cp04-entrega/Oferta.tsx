@@ -51,53 +51,61 @@ export default function Oferta({ isDark = false }: OfertaProps) {
       <div id="oferta-sections" className="relative z-10 space-y-10 md:space-y-14 lg:space-y-16">
         
         {/* Seção 1: Entregáveis (Trilha do que você leva) */}
-        <section id="secao-entregaveis" className="w-full bg-transparent py-0 sm:py-1">
-          <div className="text-center mb-3 sm:mb-5 max-w-5xl lg:max-w-6xl mx-auto px-2 sm:px-4">
+        <section id="secao-entregaveis" className="scroll-snap-section scroll-mt-20 sm:scroll-mt-24 w-full bg-transparent py-0 sm:py-1">
+          <div className="text-center mb-3 sm:mb-3 md:mb-3.5 lg:mb-4 max-w-5xl lg:max-w-6xl mx-auto px-2 sm:px-4 pt-20 sm:pt-22 md:pt-20 lg:pt-20">
             <h1 
-              className={`mt-1 sm:mt-2 text-[26px] sm:text-[32px] font-normal tracking-tight leading-[28px] sm:leading-[32px] font-sans ${
+              className={`font-cargiona text-[26px] sm:text-[28px] md:text-[38px] lg:text-[40px] font-normal tracking-tight leading-[1.08] md:leading-[1.10] ${
                 isDark ? 'text-white' : 'text-black'
               }`}
             >
-              Mais que uma entrega,<br />
-              um <span className="font-serif italic font-normal px-0.5">novo olhar</span> sobre o seu <span className="font-serif italic font-normal px-0.5">espaço</span>.
+              <span className="block">
+                Entregas que <span className="font-['Playfair_Display',serif] italic font-normal px-0.5">revelam</span>
+              </span>
+              <span className="block -mt-1 md:-mt-2">
+                um <span className="font-['Playfair_Display',serif] italic font-normal px-0.5">novo olhar</span> espacial.
+              </span>
             </h1>
-            <p 
-              className={`mt-1 sm:mt-1.5 text-[14px] sm:text-[14.5px] md:text-[15px] font-normal leading-relaxed text-center mx-auto w-full max-w-none sm:max-w-2xl md:max-w-3xl px-1 sm:px-0 [text-wrap:pretty] ${
-                isDark ? 'text-neutral-400' : 'text-slate-600'
-              }`}
-            >
-              Tudo o que você recebe neste projeto foi pensado para um único objetivo: reduzir incertezas,<br className="hidden md:inline" /> fortalecer decisões e tornar a transformação do espaço mais consciente.
-            </p>
           </div>
 
           {/* Galeria recebe diretamente o array centralizado de dados e imagens */}
           <ExpandingCards items={ENTREGAVEIS_OFERTA} defaultActiveIndex={6} />
+
+          {/* Sub-headline abaixo da galeria como complemento */}
+          <div className="text-center mt-4 md:mt-5 max-w-5xl lg:max-w-6xl mx-auto px-2 sm:px-4 pb-2">
+            <p 
+              className={`text-[14.5px] sm:text-[15px] md:text-[16px] font-normal leading-snug sm:leading-relaxed text-center mx-auto w-full max-w-none sm:max-w-2xl md:max-w-3xl px-1 sm:px-0 [text-wrap:pretty] ${
+                isDark ? 'text-neutral-400' : 'text-slate-600'
+              }`}
+            >
+              <span className="sm:hidden block w-full mx-auto text-center text-[14.5px] leading-snug">
+                Tudo o que você recebe neste projeto foi pensado<br />
+                para um único objetivo: reduzir incertezas, fortalecer<br />
+                decisões e tornar a transformação do espaço mais consciente.
+              </span>
+              <span className="hidden sm:inline">
+                Tudo o que você recebe neste projeto foi pensado para um único objetivo: reduzir incertezas, fortalecer decisões e tornar a transformação do espaço mais consciente.
+              </span>
+            </p>
+          </div>
         </section>
 
         {/* Seção 2: Alinhamento de Expectativas (Split-Screen Interativo estilo GIF) */}
-        <section id="secao-alinhamento" className={`w-full pt-6 pb-6 md:pt-8 md:pb-8 border-t bg-transparent ${
+        <section id="secao-alinhamento" className={`scroll-snap-section scroll-mt-20 sm:scroll-mt-24 w-full pb-6 md:pb-8 border-t bg-transparent ${
           isDark ? 'border-neutral-800 text-white' : 'border-slate-200 text-slate-900'
         }`}>
           
-          {/* Headline e Sub-headline */}
-          <div className="text-center mb-5 md:mb-6 max-w-3xl mx-auto px-2 sm:px-4">
-            <h2 className={`text-[26px] sm:text-[32px] font-normal tracking-tight leading-[28px] sm:leading-[32px] font-sans ${
+          {/* Headline */}
+          <div className="text-center mb-3 sm:mb-3 md:mb-3.5 lg:mb-4 max-w-3xl mx-auto px-2 sm:px-4 pt-20 sm:pt-22 md:pt-20 lg:pt-20">
+            <h2 className={`font-cargiona text-[26px] sm:text-[28px] md:text-[38px] lg:text-[40px] font-normal tracking-tight leading-[1.08] md:leading-[1.10] ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              O projeto flui ao alinhar<br /> <span className="font-serif italic font-normal px-0.5">expectativas</span> entre <span className="font-serif italic font-normal px-0.5">cliente</span> e <span className="font-serif italic font-normal px-0.5">método</span>.
+              <span className="block">
+                Sua <span className="font-['Playfair_Display',serif] italic font-normal px-0.5">visão</span> encontra
+              </span>
+              <span className="block -mt-1 md:-mt-2">
+                nossa <span className="font-['Playfair_Display',serif] italic font-normal px-0.5">forma de criar</span>.
+              </span>
             </h2>
-            <p className={`mt-1.5 sm:mt-2 text-[14.5px] sm:text-[14px] md:text-base font-normal leading-relaxed text-center mx-auto w-full max-w-none sm:max-w-2xl md:max-w-3xl px-1 sm:px-0 ${
-              isDark ? 'text-neutral-400' : 'text-slate-600'
-            }`}>
-              <span className="sm:hidden block w-full max-w-[390px] mx-auto text-center text-[14.5px] leading-snug px-1">
-                Esta metodologia foi criada para um perfil específico.<br />
-                Se o seu jeito de construir for diferente, o projeto<br />
-                arquitetônico tradicional será mais adequado.
-              </span>
-              <span className="hidden sm:inline">
-                Esta metodologia foi criada para um perfil específico de cliente. Se o seu jeito de construir for diferente, o projeto arquitetônico tradicional provavelmente será a escolha mais adequada.
-              </span>
-            </p>
           </div>
 
           {/* Componente Split Desktop */}
@@ -512,6 +520,22 @@ export default function Oferta({ isDark = false }: OfertaProps) {
               </div>
             </div>
 
+          </div>
+
+          {/* Sub-headline abaixo das galerias como complemento */}
+          <div className="text-center mt-4 md:mt-5 max-w-3xl mx-auto px-2 sm:px-4 pb-2">
+            <p className={`text-[14.5px] sm:text-[15px] md:text-base font-normal leading-snug sm:leading-relaxed text-center mx-auto w-full max-w-none sm:max-w-2xl md:max-w-3xl px-1 sm:px-0 [text-wrap:pretty] ${
+              isDark ? 'text-neutral-400' : 'text-slate-600'
+            }`}>
+              <span className="sm:hidden block w-full mx-auto text-center text-[14.5px] leading-snug">
+                Esta metodologia foi criada para um perfil específico<br />
+                de cliente. Se sua expectativa for diferente, o projeto<br />
+                tradicional provavelmente será a escolha mais adequada.
+              </span>
+              <span className="hidden sm:inline">
+                Esta metodologia foi criada para um perfil específico de cliente. Se sua expectativa for diferente, o projeto arquitetônico tradicional provavelmente será a escolha mais adequada.
+              </span>
+            </p>
           </div>
 
         </section>

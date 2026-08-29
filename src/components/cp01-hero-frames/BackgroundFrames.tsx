@@ -92,7 +92,7 @@ export function BackgroundFrames() {
 
     // Apply mobile-only zoom and lower focal point anchor so elements (like the house) sit higher on mobile
     const zoom = isMobile ? 1.22 : 1.0;
-    const verticalAnchor = isMobile ? 0.72 : 0.50; // Anchors focal point towards the lower region, lifting visual elements up
+    const verticalAnchor = isMobile ? 0.82 : 0.50; // Anchors focal point towards the lower region, lifting visual elements up
 
     let drawWidth = cw;
     let drawHeight = ch;
@@ -153,13 +153,23 @@ export function BackgroundFrames() {
     };
 
     // 1. Instantly load & paint initial frame 0 to avoid visual flash
-    loadAndDecodeFrame(activeFrameUrls[0]).then((img) => {
-      if (!isMounted) return;
+    const initialImg = new Image();
+    initialImg.src = activeFrameUrls[0];
+    if (initialImg.complete && initialImg.naturalWidth > 0) {
+      imagesCacheRef.current.set(activeFrameUrls[0], initialImg);
       const canvas = canvasRef.current;
-      if (canvas && img && img.naturalWidth > 0) {
-        drawFrameToCanvas(canvas, img);
+      if (canvas) {
+        drawFrameToCanvas(canvas, initialImg);
       }
-    });
+    } else {
+      loadAndDecodeFrame(activeFrameUrls[0]).then((img) => {
+        if (!isMounted) return;
+        const canvas = canvasRef.current;
+        if (canvas && img && img.naturalWidth > 0) {
+          drawFrameToCanvas(canvas, img);
+        }
+      });
+    }
 
     // 2. High-priority immediate streaming: load frames smoothly across idle frames
     const streamAllFrames = async () => {
@@ -216,19 +226,18 @@ export function BackgroundFrames() {
       }
     };
 
-    // Resize canvas with device-calibrated DPR and dynamic mobile viewport height
+    // Resize canvas using dynamic viewport height (dvh equivalent in JS via visualViewport)
+    // This tracks the real visible area including mobile browser bar state — no black gap on scroll
     const updateCanvasDimensions = () => {
       if (!canvas) return;
       const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       const width = window.innerWidth;
-      const height = Math.max(
-        window.innerHeight,
-        document.documentElement.clientHeight || 0,
-        window.visualViewport ? Math.round(window.visualViewport.height) : 0
-      );
+      // visualViewport.height is the JS equivalent of 100dvh: it always reflects the current visible height
+      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
       const targetW = Math.round(width * dpr);
       const targetH = Math.round(height * dpr);
+
 
       if (canvas.width !== targetW || canvas.height !== targetH) {
         canvas.width = targetW;

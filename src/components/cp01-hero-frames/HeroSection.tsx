@@ -393,11 +393,13 @@ export default function App() {
               <span className="tracking-wider text-white font-sans font-normal text-[9.5px] xs:text-[10px] sm:text-[12px] leading-[10px] sm:leading-[14px] uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">DISPONÍVEL PARA NOVOS PROJETOS</span>
             </span>
 
-            {/* Main Title, centered layout without overflow distortion */}
-            <h1 className="mt-1 sm:mt-3 lg:mt-5 text-[30px] xs:text-[34px] sm:text-4xl md:text-6xl lg:text-[72px] xl:text-[80px] font-normal tracking-tight leading-[1.08] sm:leading-[1.04] text-white w-full max-w-6xl mx-auto text-center flex flex-col items-center justify-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] px-0">
-              <span className="block text-center w-full whitespace-nowrap">O <span className="font-serif italic font-normal text-white">potencial do seu espaço</span></span>
+            {/* Main Title, centered layout with generous mobile width, refined desktop scale, and tighter line spacing */}
+            <h1 className="mt-1 sm:mt-3 lg:mt-5 text-[31px] xs:text-[35px] sm:text-[46px] md:text-[58px] lg:text-[76px] xl:text-[85px] 2xl:text-[88px] font-cargiona font-normal tracking-tight leading-[1.02] xs:leading-[1.0] sm:leading-[0.98] lg:leading-[0.96] text-white w-full max-w-full sm:max-w-[1180px] mx-auto text-center flex flex-col items-center justify-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] px-0">
               <span className="block text-center w-full whitespace-nowrap">
-                <span className="font-serif italic font-normal text-white">é maior</span> do que você <span className="font-serif italic font-normal text-white">imagina.</span>
+                O <span className="font-serif italic font-normal text-white text-[1.15em] px-0.5 sm:px-1.5 inline-block">potencial</span> do seu espaço
+              </span>
+              <span className="block text-center w-full whitespace-nowrap -mt-0.5 sm:-mt-1 lg:-mt-2">
+                <span className="font-serif italic font-normal text-white">é maior</span> do que você <span className="font-serif italic font-normal text-white text-[1.08em] px-0.5 inline-block">imagina.</span>
               </span>
             </h1>
           </div>
@@ -410,10 +412,10 @@ export default function App() {
                 {/* Ultra-subtle organic smoke vignette halo - completely seamless with no hard edges */}
                 <div className="absolute -inset-8 sm:-inset-12 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45)_0%,rgba(0,0,0,0.15)_55%,transparent_85%)] blur-2xl pointer-events-none -z-10" />
 
-                <p className="text-white text-[20px] sm:text-[21px] lg:text-[26px] leading-[28px] lg:leading-[34px] text-justify lg:text-left w-full font-normal not-italic [font-family:Arial,sans-serif] relative z-10 drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">
-                  Das <span className="font-serif italic font-bold text-[1.12em]">ideias soltas</span> à <span className="font-serif italic font-bold text-[1.12em]">visão clara</span>, existe um caminho que {' '}<br className="hidden lg:inline" />
-                  transforma as <span className="font-serif italic font-bold text-[1.12em]">possibilidades</span> do seu espaço em <span className="font-serif italic font-bold text-[1.12em]">decisões </span>{' '}<br className="hidden lg:inline" />
-                  <span className="font-serif italic font-bold text-[1.12em]">seguras</span> de projeto — <span className="font-serif italic font-bold text-[1.12em]">sessão por sessão, no seu ritmo</span>.
+                <p className="text-white text-[17.5px] xs:text-[18.5px] sm:text-[21px] lg:text-[26px] leading-[25px] xs:leading-[26px] sm:leading-[28px] lg:leading-[34px] text-justify lg:text-left w-full font-normal not-italic [font-family:Arial,sans-serif] relative z-10 drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)] [text-wrap:pretty]">
+                  Das <span className="font-serif italic font-normal text-[1.12em]">ideias soltas</span> à <span className="font-serif italic font-normal text-[1.12em]">visão clara</span>, existe um caminho que{' '}
+                  transforma as <span className="font-serif italic font-normal text-[1.12em]">possibilidades</span> do seu espaço em <span className="font-serif italic font-normal text-[1.12em]">decisões </span>{' '}
+                  <span className="font-serif italic font-normal text-[1.12em]">seguras</span> de projeto — <span className="font-serif italic font-normal text-[1.12em]">sessão por sessão, no seu ritmo</span>.
                 </p>
               </div>
 
@@ -506,7 +508,7 @@ export default function App() {
           </div>
 
           {/* Social Proof Star Rating Area (Div 3) */}
-          <div className="w-full mt-1 sm:mt-3 pt-1 sm:pt-3 pb-1 mb-1 sm:mb-4 flex flex-col items-center gap-2 sm:gap-3">
+          <div className="w-full mt-4 sm:mt-5 pt-2 sm:pt-3 pb-1 mb-1 sm:mb-6 flex flex-col items-center gap-2 sm:gap-3">
             {/* Headline */}
             <p className="text-[12.5px] xs:text-[14px] sm:text-base md:text-lg text-white text-center px-1 py-0.5 whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
               <span className="font-bold text-white">Alquimia Espacial</span> — <span className="text-white font-normal">Programa de Co-criação Arquitetônica Online</span>
@@ -537,7 +539,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Edge-to-Edge Animated Project Cards Container (Full Screen Width) - No gradient edges, transparent white cards */}
+        {/* Edge-to-Edge Animated Project Cards Container (Full Screen Width) */}
         <div className="w-full overflow-hidden no-scrollbar mt-10 sm:mt-16 md:mt-24 pt-4 sm:pt-6 pb-12 sm:pb-16 relative z-10">
           {/* Scrolling Track (Duplicated for Seamless Infinite Loop) */}
           <div className="animate-marquee flex items-center gap-2.5 sm:gap-5">
@@ -643,10 +645,10 @@ export default function App() {
           {/* Section Headline Above Video - Clean responsive typography with tighter line spacing and light gray shadow */}
           <div className="mb-2 sm:mb-1 text-center w-[92vw] min-w-[280px] max-w-[370px] sm:max-w-none sm:w-[500px] md:w-[620px] lg:w-[760px] mx-auto px-1 flex flex-col items-center relative z-20">
             <h2 className="flex flex-col items-center justify-center w-full text-center tracking-tight drop-shadow-[0_2px_14px_rgba(0,0,0,0.8)]">
-              <span className="font-sans font-medium text-white tracking-wide text-[22px] xs:text-[25px] sm:text-[30px] md:text-[32px] lg:text-[35px] leading-tight drop-shadow-[0_2px_8px_rgba(220,220,220,0.3)]">
+              <span className="font-cargiona font-normal text-white tracking-wide text-[24px] xs:text-[27px] sm:text-[34px] md:text-[40px] lg:text-[45px] leading-tight drop-shadow-[0_2px_8px_rgba(220,220,220,0.3)]">
                 Entenda o programa
               </span>
-              <span className="font-serif italic font-normal text-white text-[38px] xs:text-[44px] sm:text-[50px] md:text-[54px] lg:text-[60px] -mt-2 xs:-mt-2.5 sm:-mt-3.5 md:-mt-4 leading-tight drop-shadow-[0_2px_10px_rgba(220,220,220,0.35)]">
+              <span className="font-serif italic font-normal text-white text-[35px] xs:text-[40px] sm:text-[50px] md:text-[58px] lg:text-[66px] -mt-2.5 xs:-mt-3 sm:-mt-4 lg:-mt-5 leading-tight drop-shadow-[0_2px_10px_rgba(220,220,220,0.35)]">
                 Alquimia Espacial
               </span>
             </h2>

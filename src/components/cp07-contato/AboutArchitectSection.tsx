@@ -200,7 +200,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                   <span className="text-xs xs:text-sm sm:text-base font-['DM_Sans'] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#C8AF52] font-bold text-left shrink-0">
                     ARQUITETO
                   </span>
-                  <h2 className="text-3xl xs:text-4xl sm:text-4xl lg:text-5xl font-['Playfair_Display'] italic font-medium tracking-tight text-stone-900 leading-[1.1] text-right">
+                  <h2 className="text-3xl xs:text-4xl sm:text-4xl lg:text-5xl font-cargiona font-normal tracking-tight text-stone-900 leading-[1.1] text-right">
                     José de Alencar
                   </h2>
                 </div>
