@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Minus, Search, HelpCircle, Package, Clock, Handshake, FileText, Gift, DollarSign, MessageSquare, X } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 import GridBackground from '../GridBackground';
-import termosMarkdown from '../../../../../.componentes/COMPONENTE-06-FAQ/assets/termos-alquimia-espacial.md?raw';
 
 const categoryIcons: Record<string, React.ReactNode> = {
   formato: <Package className="w-4 h-4" aria-hidden="true" />,
@@ -55,7 +53,6 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
   const [openIndex, setOpenIndex] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -540,92 +537,17 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
 
         {/* Card de Ajuda Centralizado */}
         <footer className="mt-10 sm:mt-12 flex justify-center w-full">
-          <button 
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c49a2a] ${
-              isDark 
-                ? 'bg-[#18181c] hover:bg-[#22222a] text-zinc-300 border border-zinc-800 shadow-xs' 
-                : 'bg-slate-100 hover:bg-slate-200/90 text-slate-700 border border-slate-200/80 shadow-2xs'
-            }`}
-          >
-            <FileText className={`w-4 h-4 ${isDark ? 'text-zinc-400' : 'text-slate-500'}`} aria-hidden="true" />
-            <span className="underline decoration-[#c49a2a]/40 underline-offset-4 hover:decoration-[#c49a2a]">
-              Ver os termos de serviço do Alquimia Espacial
-            </span>
-          </button>
+          <div className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all ${
+            isDark 
+              ? 'bg-[#18181c] text-zinc-300 border border-zinc-800 shadow-xs' 
+              : 'bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs'
+          }`}>
+            <MessageSquare className={`w-3.5 h-3.5 ${isDark ? 'text-zinc-400' : 'text-slate-500'}`} aria-hidden="true" />
+            <span>Se ainda tiver dúvidas, estamos aqui para ajudar.</span>
+          </div>
         </footer>
 
       </div>
-
-      {/* Modal Minimalista de Termos */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:p-6 overflow-hidden">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
-              onClick={() => setIsModalOpen(false)}
-              aria-hidden="true"
-            />
-            
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="terms-modal-title"
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-              className={`relative z-10 w-full max-w-2xl max-h-[90vh] sm:max-h-full flex flex-col rounded-2xl shadow-2xl overflow-hidden ${
-                isDark ? 'bg-[#0d0d10] border border-[#1f1f24] text-zinc-300' : 'bg-white border border-slate-200 text-slate-700'
-              }`}
-            >
-              <div className={`flex items-center justify-between p-4 sm:p-5 border-b shrink-0 ${
-                isDark ? 'border-zinc-800/80' : 'border-slate-100'
-              }`}>
-                <h2 id="terms-modal-title" className={`text-base sm:text-lg font-semibold flex items-center gap-2 ${
-                  isDark ? 'text-white' : 'text-slate-900'
-                }`}>
-                  <FileText className="w-5 h-5 text-[#c49a2a]" />
-                  Termos de Serviço
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className={`p-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c49a2a] cursor-pointer ${
-                    isDark ? 'hover:bg-white/10 text-zinc-400' : 'hover:bg-slate-100 text-slate-500'
-                  }`}
-                >
-                  <X className="w-5 h-5" aria-hidden="true" />
-                </button>
-              </div>
-              
-              <div className="p-5 sm:p-7 overflow-y-auto font-sans">
-                <div className="space-y-4">
-                  <ReactMarkdown
-                    components={{
-                      h1: ({node, ...props}) => <h1 className={`text-xl sm:text-2xl font-serif mb-4 ${isDark ? 'text-[#e5bd4f]' : 'text-[#c49a2a]'}`} {...props} />,
-                      h2: ({node, ...props}) => <h2 className={`text-lg sm:text-xl font-serif mt-6 mb-3 ${isDark ? 'text-[#e5bd4f]' : 'text-[#c49a2a]'}`} {...props} />,
-                      p: ({node, ...props}) => <p className="leading-relaxed text-sm sm:text-base" {...props} />,
-                      strong: ({node, ...props}) => <strong className={`font-semibold ${isDark ? 'text-zinc-200' : 'text-slate-800'}`} {...props} />,
-                      hr: ({node, ...props}) => <hr className={`my-6 border-t ${isDark ? 'border-zinc-800' : 'border-slate-200'}`} {...props} />,
-                      ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base" {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base" {...props} />,
-                      li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-                    }}
-                  >
-                    {termosMarkdown}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 });
