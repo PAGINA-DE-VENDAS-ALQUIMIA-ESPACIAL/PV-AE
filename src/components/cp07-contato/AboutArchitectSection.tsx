@@ -8,6 +8,7 @@ import { GradientBars } from './ui/GradientBars';
 
 interface AboutArchitectSectionProps {
   className?: string;
+  isDark?: boolean;
 }
 
 const TOPICS = [
@@ -24,6 +25,7 @@ const TOPICS = [
 
 export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
   className = '',
+  isDark = false,
 }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isColorClicked, setIsColorClicked] = useState<boolean>(false);
@@ -42,13 +44,13 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
   return (
     <section 
       id="secao-sobre-o-arquiteto" 
-      className={`relative w-full pt-20 sm:pt-24 lg:pt-24 pb-12 sm:pb-16 lg:pb-20 px-3.5 sm:px-6 overflow-hidden bg-white flex justify-center items-center font-['DM_Sans'] transition-colors duration-300 ${className}`}
+      className={`relative w-full pt-20 sm:pt-24 lg:pt-24 pb-12 sm:pb-16 lg:pb-20 px-3.5 sm:px-6 overflow-hidden flex justify-center items-center font-['DM_Sans'] transition-colors duration-300 ${isDark ? 'bg-neutral-950' : 'bg-white'} ${className}`}
     >
       {/* Background Olive Green GradientBars - Light Olive (#C8AF52) */}
       <GradientBars
         numBars={19}
         gradientFrom="#C8AF52"
-        gradientTo="#ffffff"
+        gradientTo={isDark ? '#0a0a0a' : '#ffffff'}
         animationDuration={2.2}
         className="opacity-95"
       />
@@ -60,7 +62,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden rounded-3xl bg-white border border-stone-200 shadow-xl backdrop-blur-xl transition-colors duration-300 min-h-0 lg:min-h-[500px]"
+          className={`relative overflow-hidden rounded-3xl border shadow-xl backdrop-blur-xl transition-colors duration-300 min-h-0 lg:min-h-[500px] ${isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-stone-200'}`}
         >
           <div className="flex flex-col lg:grid lg:grid-cols-12 items-stretch min-h-0 lg:min-h-[460px]">
             
@@ -200,14 +202,14 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                   <span className="text-xs xs:text-sm sm:text-base font-['DM_Sans'] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#C8AF52] font-bold text-left shrink-0">
                     ARQUITETO
                   </span>
-                  <h2 className="text-3xl xs:text-4xl sm:text-4xl lg:text-5xl font-cargiona font-normal tracking-tight text-stone-900 leading-[1.1] text-right">
+                  <h2 className={`text-3xl xs:text-4xl sm:text-4xl lg:text-5xl font-cargiona font-normal tracking-tight leading-[1.1] text-right ${isDark ? 'text-white' : 'text-stone-900'}`}>
                     José de Alencar
                   </h2>
                 </div>
 
                 {/* Desktop Version: Always Visible */}
                 <div className="hidden sm:block space-y-5">
-                  <p className="text-stone-800 text-sm xs:text-base sm:text-base lg:text-lg font-normal leading-relaxed text-justify font-['DM_Sans']">
+                  <p className={`text-sm xs:text-base sm:text-base lg:text-lg font-normal leading-relaxed text-justify font-['DM_Sans'] ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                     Formado pela FADIC (Recife/PE), desenvolveu o Alquimia Espacial para transformar o projeto arquitetônico em um processo de descoberta compartilhada. Mais do que apresentar soluções, conduz cada cliente por uma jornada de percepção, escolhas conscientes e decisões que fazem sentido para a realidade de quem vai viver o espaço.
                   </p>
 
@@ -216,7 +218,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                       <span className="text-xs sm:text-sm uppercase tracking-widest font-['DM_Sans'] text-[#C8AF52] font-bold block">
                         MISSÃO
                       </span>
-                      <p className="text-sm xs:text-base sm:text-base lg:text-lg text-stone-800 font-normal leading-relaxed text-justify font-['DM_Sans']">
+                      <p className={`text-sm xs:text-base sm:text-base lg:text-lg font-normal leading-relaxed text-justify font-['DM_Sans'] ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                         Transformar dúvidas em clareza, para que cada decisão arquitetônica nasça da compreensão do espaço e das pessoas que o habitam.
                       </p>
                     </div>
@@ -225,7 +227,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                       <span className="text-xs sm:text-sm uppercase tracking-widest font-['DM_Sans'] text-[#C8AF52] font-bold block">
                         VISÃO
                       </span>
-                      <p className="text-sm xs:text-base sm:text-base lg:text-lg text-stone-800 font-normal leading-relaxed text-justify font-['DM_Sans']">
+                      <p className={`text-sm xs:text-base sm:text-base lg:text-lg font-normal leading-relaxed text-justify font-['DM_Sans'] ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                         Tornar a arquitetura mais acessível, participativa e consciente, para que mais pessoas possam construir com segurança e propósito.
                       </p>
                     </div>
@@ -240,7 +242,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                     }`}
                   >
                     <div className="overflow-hidden space-y-3.5 pb-1">
-                      <p className="text-stone-800 text-sm font-normal leading-relaxed text-justify font-['DM_Sans'] pt-1">
+                      <p className={`text-sm font-normal leading-relaxed text-justify font-['DM_Sans'] pt-1 ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                         Formado pela FADIC (Recife/PE), desenvolveu o Alquimia Espacial para transformar o projeto arquitetônico em um processo de descoberta compartilhada. Mais do que apresentar soluções, conduz cada cliente por uma jornada de percepção, escolhas conscientes e decisões que fazem sentido para a realidade de quem vai viver o espaço.
                       </p>
 
@@ -249,7 +251,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                           <span className="text-xs uppercase tracking-widest font-['DM_Sans'] text-[#C8AF52] font-bold block">
                             MISSÃO
                           </span>
-                          <p className="text-sm xs:text-base text-stone-800 font-normal leading-relaxed text-justify font-['DM_Sans']">
+                          <p className={`text-sm xs:text-base font-normal leading-relaxed text-justify font-['DM_Sans'] ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                             Transformar dúvidas em clareza, para que cada decisão arquitetônica nasça da compreensão do espaço e das pessoas que o habitam.
                           </p>
                         </div>
@@ -258,7 +260,7 @@ export const AboutArchitectSection: React.FC<AboutArchitectSectionProps> = ({
                           <span className="text-xs uppercase tracking-widest font-['DM_Sans'] text-[#C8AF52] font-bold block">
                             VISÃO
                           </span>
-                          <p className="text-sm xs:text-base text-stone-800 font-normal leading-relaxed text-justify font-['DM_Sans']">
+                          <p className={`text-sm xs:text-base font-normal leading-relaxed text-justify font-['DM_Sans'] ${isDark ? 'text-stone-300' : 'text-stone-800'}`}>
                             Tornar a arquitetura mais acessível, participativa e consciente, para que mais pessoas possam construir com segurança e propósito.
                           </p>
                         </div>

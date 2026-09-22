@@ -10,9 +10,14 @@ import { AboutArchitectSection } from './AboutArchitectSection';
 import { FooterSection } from './FooterSection';
 import bannerImg from '../../assets/Bannerr 2.png';
 
-export default function App() {
+interface ContatoSectionProps {
+  isDark?: boolean;
+}
+
+export default function App({ isDark = false }: ContatoSectionProps = {}) {
   const [isBannerZoomed, setIsBannerZoomed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
 
   const handleMouseEnter = useCallback(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches) {
@@ -27,19 +32,24 @@ export default function App() {
   const activeZoom = isBannerZoomed || isHovered;
 
   return (
-    <div className="min-h-screen w-full bg-white text-stone-900 font-sans flex flex-col transition-colors duration-300">
+    <div className={`min-h-screen w-full font-sans flex flex-col transition-colors duration-300 ${
+      isDark ? 'bg-black text-stone-100' : 'bg-white text-stone-900'
+    }`}>
       
       {/* Áreas das Seções Inteiras dividindo o espaço */}
       <main className="w-full flex-1 flex flex-col">
         
         {/* Seção 1: Sobre o Arquiteto */}
-        <AboutArchitectSection />
+        <AboutArchitectSection isDark={isDark} />
 
         {/* Seção 2: CTA Final */}
         <section 
           id="secao-cta-final" 
-          className="relative w-full bg-white overflow-hidden transition-colors duration-300"
+          className={`relative w-full overflow-hidden transition-colors duration-300 ${
+            isDark ? 'bg-black' : 'bg-white'
+          }`}
         >
+
           {/* Banner de fundo com zoom interativo e deslocamento ao passar o mouse ou clicar */}
           <div 
             className="relative w-full aspect-[2.85/1] xs:aspect-[3.1/1] sm:aspect-auto sm:h-[320px] lg:h-[360px] overflow-hidden cursor-pointer select-none"
@@ -119,7 +129,7 @@ export default function App() {
         </section>
 
         {/* Seção 3: Rodapé */}
-        <FooterSection />
+        <FooterSection isDark={isDark} />
 
       </main>
     </div>

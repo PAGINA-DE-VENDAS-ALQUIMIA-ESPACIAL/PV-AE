@@ -6,6 +6,7 @@ import { GradientBars } from './ui/GradientBars';
 
 interface FooterSectionProps {
   className?: string;
+  isDark?: boolean;
 }
 
 const SOCIAL_LINKS = [
@@ -17,17 +18,18 @@ const SOCIAL_LINKS = [
 
 export const FooterSection: React.FC<FooterSectionProps> = ({
   className = '',
+  isDark = false,
 }) => {
   return (
     <footer 
       id="secao-rodape" 
-      className={`w-full bg-white relative overflow-hidden px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 font-['DM_Sans'] transition-colors duration-300 ${className}`}
+      className={`w-full relative overflow-hidden px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 lg:pb-20 font-['DM_Sans'] transition-colors duration-300 ${isDark ? 'bg-neutral-950' : 'bg-white'} ${className}`}
     >
       {/* Background Red GradientBars in Footer (#E25236) */}
       <GradientBars
         numBars={21}
         gradientFrom="#E25236"
-        gradientTo="#ffffff"
+        gradientTo={isDark ? '#0a0a0a' : '#ffffff'}
         direction="top"
         minHeight={68}
         animationDuration={2}
@@ -40,7 +42,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-30px" }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 overflow-hidden rounded-3xl bg-white border border-stone-200 text-stone-900 p-3.5 sm:p-6 lg:p-7 shadow-xl max-w-6xl mx-auto flex flex-col justify-between gap-2 sm:gap-3"
+        className={`relative z-10 overflow-hidden rounded-3xl border p-3.5 sm:p-6 lg:p-7 shadow-xl max-w-6xl mx-auto flex flex-col justify-between gap-2 sm:gap-3 ${isDark ? 'bg-neutral-900 border-neutral-700 text-stone-100' : 'bg-white border-stone-200 text-stone-900'}`}
       >
         
         {/* Top Section: Tagline on the left & Social Icons on the right */}

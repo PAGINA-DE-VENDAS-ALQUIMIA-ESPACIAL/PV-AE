@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, MouseEvent } from 'react';
-import { ArrowRight, Menu, X, Star, ChevronDown, Sparkles, Compass, ShieldCheck, Play, User } from 'lucide-react';
+import { ArrowRight, Menu, X, Star, ChevronDown, Sparkles, Compass, ShieldCheck, Play, User, Sun, Moon } from 'lucide-react';
 import logoHorizontalBranca from '../../assets/images/Logomarca Horizontal - Secundária - Branca.svg';
 import logoHorizontalColorida from '../../assets/images/Logomarca Horizontal - Secundária.svg';
 import logoVerticalBranca from '../../assets/images/Logomarca Vertical - Principal - Branca.svg';
@@ -71,15 +71,20 @@ const menuCategories: {
   },
 ];
 
-export default function App() {
+interface HeroSectionProps {
+  isDark?: boolean;
+  onToggleDark?: () => void;
+}
+
+export default function App({ isDark = false, onToggleDark }: HeroSectionProps = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isHeaderLogoColored, setIsHeaderLogoColored] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [isClientPortalModalOpen, setIsClientPortalModalOpen] = useState(false);
   const headerLogoTimerRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const toggleMobileSubmenu = (key: string) => {
     setExpandedMobileMenu(prev => prev === key ? null : key);
@@ -178,6 +183,10 @@ export default function App() {
     <div className="min-h-screen bg-black text-white font-sans flex flex-col selection:bg-white selection:text-black relative">
       {/* Dynamic Fluid Background Frame Animation (Mobile 9:16 & Desktop 16:9) */}
       <BackgroundFrames />
+      {/* Dark mode film overlay on the hero background */}
+      {isDark && (
+        <div className="absolute inset-0 bg-black/45 pointer-events-none z-[1] transition-opacity duration-300" />
+      )}
 
       {/* Navigation Header (Fixed Top so it stays visible across all sections on mobile & desktop) */}
       <header className="fixed top-0 inset-x-0 z-50 w-full px-3 sm:px-6 md:px-8 py-2.5 sm:py-3.5 transition-all duration-300 pointer-events-none">
@@ -250,8 +259,25 @@ export default function App() {
               })}
             </nav>
 
-            {/* Header Right Actions: Desktop Login Icon + Mobile Menu Toggle */}
-            <div className="flex items-center gap-3 lg:justify-self-end">
+            {/* Header Right Actions: Theme Toggle + Desktop Login Icon + Mobile Menu Toggle */}
+            <div className="flex items-center gap-2 sm:gap-3 lg:justify-self-end">
+              {/* Theme Toggle Button (Desktop & Mobile) */}
+              {onToggleDark && (
+                <button
+                  type="button"
+                  onClick={onToggleDark}
+                  className="flex items-center justify-center p-1.5 transition-transform hover:scale-110 active:scale-95 duration-200 cursor-pointer text-white hover:text-amber-300 focus:outline-none"
+                  title={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+                  aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+                >
+                  {isDark ? (
+                    <Sun className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2] drop-shadow-[0_1.5px_3.5px_rgba(0,0,0,0.95)]" />
+                  ) : (
+                    <Moon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2] drop-shadow-[0_1.5px_3.5px_rgba(0,0,0,0.95)]" />
+                  )}
+                </button>
+              )}
+
               {/* Desktop Login / Espaço Co-criação Icon (Strong icon with drop shadow, no box/rectangle) */}
               <a 
                 href="#"
@@ -271,6 +297,7 @@ export default function App() {
                 aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
                 aria-expanded={mobileMenuOpen}
               >
+
                 {mobileMenuOpen ? (
                   <X className="w-6 h-6 text-white drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.9)]" />
                 ) : (

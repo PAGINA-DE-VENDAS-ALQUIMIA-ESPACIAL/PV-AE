@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { TermsModal } from './TermsModal';
+
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Minus, Search, HelpCircle, Package, Clock, Handshake, FileText, Gift, DollarSign, MessageSquare, X } from 'lucide-react';
 import GridBackground from '../GridBackground';
@@ -53,6 +55,7 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
   const [openIndex, setOpenIndex] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [isTermsOpen, setIsTermsOpen] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -535,17 +538,25 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
           </AnimatePresence>
         </div>
 
-        {/* Card de Ajuda Centralizado */}
+        {/* Botão de Termos de Serviço */}
         <footer className="mt-10 sm:mt-12 flex justify-center w-full">
-          <div className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all ${
-            isDark 
-              ? 'bg-[#18181c] text-zinc-300 border border-zinc-800 shadow-xs' 
-              : 'bg-slate-100 text-slate-700 border border-slate-200/80 shadow-2xs'
-          }`}>
-            <MessageSquare className={`w-3.5 h-3.5 ${isDark ? 'text-zinc-400' : 'text-slate-500'}`} aria-hidden="true" />
-            <span>Se ainda tiver dúvidas, estamos aqui para ajudar.</span>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsTermsOpen(true)}
+            className={`group inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer hover:shadow-xs ${
+              isDark 
+                ? 'bg-[#18181c] hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700 shadow-xs' 
+                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-700 hover:text-slate-900 border border-slate-200/80 hover:border-slate-300 shadow-2xs'
+            }`}
+          >
+            <FileText className={`w-3.5 h-3.5 transition-colors ${isDark ? 'text-zinc-400 group-hover:text-amber-400' : 'text-slate-500 group-hover:text-amber-600'}`} aria-hidden="true" />
+            <span className="underline decoration-slate-300 group-hover:decoration-current underline-offset-2">Ver os termos de serviço do Alquimia Espacial</span>
+          </button>
         </footer>
+
+        {/* Modal de Termos de Serviço */}
+        <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+
 
       </div>
     </section>

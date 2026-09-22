@@ -11,11 +11,12 @@ import { VideoBackground } from "./VideoBackground";
 
 interface AppProps {
   initialDark?: boolean;
+  isDark?: boolean;
 }
 
-export default function App({ initialDark = false }: AppProps) {
-  // Configura o tema (padrão claro/branco por padrão, mas pronto para chavear para escuro)
-  const [isDark] = useState<boolean>(initialDark);
+export default function App({ initialDark = false, isDark: propDark }: AppProps) {
+  const isDark = propDark !== undefined ? propDark : initialDark;
+
 
   return (
     <div className={`relative w-full h-screen h-[100dvh] max-h-[100dvh] overflow-hidden transition-colors duration-300 font-sans flex flex-col justify-between ${isDark ? 'bg-black text-white' : 'bg-white text-slate-900'}`}>
