@@ -35,7 +35,7 @@ export default function App() {
       <div id="deliverables" className={`relative z-10 pb-16 md:pb-20 lg:pb-24 overflow-hidden transition-colors duration-300 ${
         isDark ? 'bg-black text-white' : 'bg-white text-stone-900'
       }`}>
-        <GridBackground isDark={isDark} opacity={isDark ? 0.15 : 0.10} gridSize={40} />
+        <GridBackground isDark={isDark} opacity={isDark ? 0.25 : 0.10} gridSize={40} />
         <Oferta isDark={isDark} />
       </div>
 

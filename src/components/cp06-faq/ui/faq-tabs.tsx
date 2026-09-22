@@ -230,7 +230,7 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
     >
       
       {/* Grid de fundo ortogonal */}
-      <GridBackground isDark={isDark} opacity={isDark ? 0.2 : 0.18} gridSize={40} />
+      <GridBackground isDark={isDark} opacity={isDark ? 0.25 : 0.18} gridSize={40} />
 
       <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
         
@@ -555,7 +555,7 @@ export const FAQ: React.FC<FAQProps> = React.memo(({
         </footer>
 
         {/* Modal de Termos de Serviço */}
-        <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+        <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} isDark={isDark} />
 
 
       </div>

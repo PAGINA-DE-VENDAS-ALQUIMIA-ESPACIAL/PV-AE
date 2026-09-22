@@ -17,6 +17,7 @@ import { BackgroundFrames } from './BackgroundFrames';
 
 const ProposalFormModal = lazy(() => import('./ProposalFormModal').then(m => ({ default: m.ProposalFormModal })));
 const ClientPortalModal = lazy(() => import('./ClientPortalModal').then(m => ({ default: m.ClientPortalModal })));
+import { TermsModal } from '../cp06-faq/ui/TermsModal';
 
 const NOTION_FORM_URL = "https://alquimiaespacial.notion.site/36c302780bb881e29a53cd4ee6435a7e";
 
@@ -83,6 +84,7 @@ export default function App({ isDark = false, onToggleDark }: HeroSectionProps =
   const [isHeaderLogoColored, setIsHeaderLogoColored] = useState(false);
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [isClientPortalModalOpen, setIsClientPortalModalOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
   const headerLogoTimerRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -536,10 +538,16 @@ export default function App({ isDark = false, onToggleDark }: HeroSectionProps =
 
           {/* Social Proof Star Rating Area (Div 3) */}
           <div className="w-full mt-4 sm:mt-5 pt-2 sm:pt-3 pb-1 mb-1 sm:mb-6 flex flex-col items-center gap-2 sm:gap-3">
-            {/* Headline */}
-            <p className="text-[12.5px] xs:text-[14px] sm:text-base md:text-lg text-white text-center px-1 py-0.5 whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
-              <span className="font-bold text-white">Alquimia Espacial</span> — <span className="text-white font-normal">Programa de Co-criação Arquitetônica Online</span>
-            </p>
+            {/* Headline / Terms Link */}
+            <button 
+              onClick={() => setIsTermsOpen(true)}
+              className="group flex items-center justify-center gap-1.5 sm:gap-2 text-[12.5px] xs:text-[14px] sm:text-base md:text-lg text-white text-center px-2 py-1 whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 group-hover:text-amber-400 transition-colors" />
+              <span>
+                <span className="font-bold">Alquimia Espacial</span> — <span className="font-normal">Programa de Co-criação Arquitetônica Online</span>
+              </span>
+            </button>
 
             {/* Star Rating Badge (Gold accent) linking to Google Maps */}
             <a 
@@ -855,6 +863,15 @@ export default function App({ isDark = false, onToggleDark }: HeroSectionProps =
             onRequestProposal={() => setIsProposalModalOpen(true)}
           />
         </Suspense>
+      )}
+      
+      {/* Terms of Service Modal */}
+      {isTermsOpen && (
+        <TermsModal
+          isOpen={isTermsOpen}
+          onClose={() => setIsTermsOpen(false)}
+          isDark={isDark}
+        />
       )}
     </div>
   );
